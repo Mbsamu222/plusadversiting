@@ -1,0 +1,75 @@
+.dropdown {
+  height: 60vh;
+  background: linear-gradient(to left, #e8ebf0 0%, #3c8cee, #fd1490 87%);
+  display: flex;
+}
+.dropdown {
+  position: relative; /* Ensure relative positioning for absolute elements inside */
+}
+
+.dropdown-field {
+  display: flex;
+  gap: 100px; /* Adjust the gap between select elements */
+  padding: 100px;
+  align-items: center;
+  padding-left: 160px;
+  border-radius: 10px;
+}
+
+.dropdown-field select {
+  padding: 8px;
+  font-size: 15px;
+  width: 300px;
+  border-radius: 7px;
+}
+
+.popup-and-button {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, 10px); /* Adjust the vertical positioning */
+  background-color: #fff; /* Optional: Add a background color for better visibility */
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow for a raised effect */
+  z-index: 1000; /* Ensure the popup is above other content */
+}
+.image-popup {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap; /* Allow items to wrap to a new line */
+}
+
+.image-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.image-popup img {
+  width: 175px; /* Adjust as needed */
+  margin-right: 10px;
+}
+
+.image-option input[type="radio"],
+.image-option label {
+    display: inline;
+    vertical-align: middle; /* Align input and label vertically */
+    margin-right: 5px;
+}
+.dropdown-btn button {
+  border-radius: 5px; /* Adjust the value as needed */
+  padding: 10px 30px; /* Example padding */
+  padding-bottom: 10px;
+  background-color: #007bff; /* Example background color */
+  color: #fff; /* Example text color */
+  border: none; /* Remove border */
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.dropdown-btn button:hover {
+  background-color: #0056b3; /* Example hover background color */
+}

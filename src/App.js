@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
 import Navbar from './Components/Navbar/Navbar';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Note the use of Routes
 import Dropdown from './Components/Dropdown/Dropdown';
 import Home from './Pages/Home';
 import HomeCategory from './Pages/HomeCategory';
-import LoginSignup from './Pages/LoginSignup'
+import LoginSignup from './Pages/LoginSignup';
+import Composepage from '../src/Pages/Composepage/Composepage'
+
 
 
 function App() {
@@ -13,31 +15,17 @@ function App() {
     <div className="App">
       <Router>
         <Navbar />
-          <Route>
+        <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/services' element={<HomeCategory category='SERVICES' />} />
-          <Route path='/contact us' element={<HomeCategory category='CONTACTUS' />} />
-          <Route path='./loginsignup' element={<LoginSignup />} />
-          </Route>
-          
-          <Router>
-            
-                <Route exact path="/" component={Dropdown} />
-                <Route path="/compose" component={ComposePage} />
-          <Route path="/services" render={() => <HomeCategory category="SERVICES" />} />
-          <Route path="/contactus" render={() => <HomeCategory category="CONTACTUS" />} />
-          <Route path="/loginsignup" element={<LoginSignup/>}/>
-          <Route path="/" component={Home} />
-        </Switch>
+          <Route path='/contactus' element={<HomeCategory category='CONTACTUS' />} />
+          <Route path='/loginsignup' element={<LoginSignup />} />
+
+          <Route path="/" element={<Dropdown />} /> {/* No need for exact in v6 */}
+          <Route path="/compose" element={<Composepage />} />
+        </Routes>
       </Router>
-        
-
-
-        </Router>
     </div>
-
-    </div>
-
   );
 }
 

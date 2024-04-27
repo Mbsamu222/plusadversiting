@@ -1,0 +1,102 @@
+.login-signup-container{
+    height: 150vh;
+    background: linear-gradient(to left, #e8ebf0 0%, #3c8cee, #fd1490 87%);
+}
+.login-form {
+    width: 300px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the form horizontally */
+    background-color: #ffffff; /* White background color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add a box shadow for depth */
+}
+
+/* Style the form inputs */
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Style the login button */
+.login-form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Blue button color */
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Style the forgot password button */
+.forgot-password button {
+    background-color: transparent;
+    border: none;
+    color: #007bff; /* Blue text color */
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Center the forgot password button */
+.forgot-password {
+    text-align: center;
+}
+
+/* Center the form container vertically */
+.login-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust as needed */
+    background-color: #f8f9fa; /* Optional: set a background color for the entire page */
+}
+.signup-form {
+    width: 300px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the form horizontally */
+    background-color: #ffffff; /* White background color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add a box shadow for depth */
+}
+
+/* Style the form inputs */
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"],
+.signup-form input[type="checkbox"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Style the register button */
+.signup-form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745; /* Green button color */
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Style the terms and conditions label */
+.signup-form label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* Center the form container vertically */
+.signup-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust as needed */
+    background-color: #f8f9fa; /* Optional: set a background color for the entire page */
+}
