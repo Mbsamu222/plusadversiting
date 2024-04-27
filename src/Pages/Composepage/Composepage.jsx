@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Composepage.css';
@@ -73,7 +72,6 @@ const ComposePage = () => {
     const [extraPrice, setExtraPrice] = useState(485);
     const [totalPrice, setTotalPrice] = useState(0); // State to store total price
     const [extraCharacters, setExtraCharacters] = useState(0); // State to store extra characters
-    const [selectedDate] = useState(null);
     const [isTickAdded, setIsTickAdded] = useState(false); // State to track if tick is added
     const [isBoldText, setIsBoldText] = useState(false);
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
@@ -90,36 +88,6 @@ const ComposePage = () => {
         setSelectedInputLabel(params.get('selectedInputLabel') || '');
     }, [location.search,params]);
     
-
-
-    const handleSaveData = async () => {
-        try {
-            // Prepare the data to be sent to the backend
-            const data = {
-                selectedPublication,
-                selectedCategory,
-                selectedEdition,
-                selectedInputLabel,
-                selectedSubCategory1,
-                selectedSubCategory2,
-                textAreaValue,
-                totalPrice,
-                selectedDate
-            };
-
-
-            console.log('Data to be sent to backend:', data); // Log data before sending
-
-            // Send a POST request to the backend API to save the data
-            const response = await axios.post('http://localhost:4000/saveData', data);
-            console.log('Response from backend:', response.data); // Log the response from the backend
-
-            // Optionally, display a success message or perform other actions after successful data saving
-        } catch (error) {
-            console.error('Error saving data:', error);
-            // Handle errors, such as displaying an error message to the user
-        }
-    };
 
 
     const handleTickBoxChange = (e) => {
@@ -172,7 +140,7 @@ const ComposePage = () => {
 
     const subCategory1Options = [
         { value: 'Wanted Bride', label: 'Wanted Bride' },
-        { value: 'Wanted Grooms', label: 'wanted Grooms' },
+        { value: 'Wanted Grooms', label: 'Wanted Grooms' },
     ];
 
     const subCategory2Options = [
@@ -507,7 +475,7 @@ const ComposePage = () => {
 
                 <div>
                     <div className="composepage-btn">
-                        <button type='button' onClick={handleSaveData}> Proceed To Payment </button>
+                        <button type='button'> Proceed To Payment </button>
                     </div>
                 </div>
             </div>
