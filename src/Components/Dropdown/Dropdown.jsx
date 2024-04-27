@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Dropdown.css';
 import classified_text from '../Assests/classified_text.png'
 import classified_display from '../Assests/classified _display.png'
@@ -15,6 +15,7 @@ const Dropdown = () => {
     const [showImagePopup1, setShowImagePopup1] = useState(false);
     const [showImagePopup2, setShowImagePopup2] = useState(false);
     const [showImagePopup3, setShowImagePopup3] = useState(false);
+    const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
     const publicationOptions = [
         { value: 'THE HINDU', label: 'THE HINDU' },
@@ -80,6 +81,11 @@ const Dropdown = () => {
         window.location.href = composePagePath;
     };
 
+    useEffect(() => {
+        setIsNextButtonDisabled(!(selectedPublication && selectedCategory && selectedEdition && selectedImageType));
+    }, [selectedPublication, selectedCategory, selectedEdition, selectedImageType]);
+
+
     const editionOptions = getEditionOptions();
 
     return (
@@ -143,7 +149,7 @@ const Dropdown = () => {
                             )}
                         </div>
                         <div className='dropdown-btn'>
-                            <button type="button" onClick={handleNextButtonClick}>NEXT</button>
+                            <button type="button" onClick={handleNextButtonClick} disabled={isNextButtonDisabled} >NEXT</button>
                         </div>
                     </div>
                 </div>
