@@ -139,7 +139,7 @@ const Dropdown = () => {
                                         </p>
                                     </div>
                                     <div className="image-option">
-                                        <img src={display_picture} alt="Display Picture" />
+                                        <img src={display_picture} alt="Display" />
                                         <p>
                                             <input type="radio" name="imageType" value="Display Picture" id="image3_option1" checked={selectedImageType === 'Display Picture'} onChange={handleImageTypeChange} />
                                             <label htmlFor="image3_option1">Display Picture</label>
@@ -149,7 +149,7 @@ const Dropdown = () => {
                             )}
                         </div>
                         <div className='dropdown-btn'>
-                            <button type="button" onClick={handleNextButtonClick} disabled={isNextButtonDisabled} >NEXT</button>
+                            <button type="button" onClick={handleNextButtonClick} disabled={isNextButtonDisabled}>NEXT</button>
                         </div>
                     </div>
                 </div>

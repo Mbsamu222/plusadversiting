@@ -60,16 +60,22 @@
     margin-right: 5px;
 }
 .dropdown-btn button {
-  border-radius: 5px; /* Adjust the value as needed */
-  padding: 10px 30px; /* Example padding */
+  border-radius: 5px;
+  padding: 10px 30px;
   padding-bottom: 10px;
-  background-color: #007bff; /* Example background color */
-  color: #fff; /* Example text color */
-  border: none; /* Remove border */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
   font-size: 15px;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Add transition for smoother color change */
 }
 
-.dropdown-btn button:hover {
-  background-color: #0056b3; /* Example hover background color */
+.dropdown-btn button:disabled {
+  background-color: #ccc; /* Set disabled background color */
+  cursor: not-allowed; /* Change cursor for disabled state */
+}
+
+.dropdown-btn button:hover:not(:disabled) {
+  background-color: #0056b3; /* Hover color for enabled button */
 }

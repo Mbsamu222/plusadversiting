@@ -1,9 +1,27 @@
 .package {
-    height: 150vh;
+    display: flex;
+    justify-content:space-around;
+    align-items: flex-start;
+    height: 100vh;
     background: linear-gradient(to left, #e8ebf0 0%, #3c8cee, #fd1490 87%);
     display: flex;
+    
 }
-
+.marquee-container {
+    white-space: nowrap;
+    overflow: hidden;
+    animation: marquee 30s linear infinite;
+    color: black;
+    font-size: large;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  
 .side.menu {
     display: flex;
     flex-direction: column;
@@ -28,38 +46,89 @@ select {
     color: white;
 }
 
-.container {
-    margin-top: 80px;
-    margin-right: 460px;
-
+.container{
+    margin-left: 10px;
+    margin-top: 20px;
 }
-
-.content {
+.input-field {
+    margin-bottom: 20px; /* Add margin bottom to create a gap */
+}
+.container h3{
+    color: white;
+}
+.horizonital-line-box {
     margin-top: 20px;
     /* Space between subcategories and horizontal line box */
-    width: 150px;
+    width: 180px;
     height: 19px;
     font-size: 14px;
     background-color: white;
+    border-radius: 5px;
+    margin-right: 490px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+.content {
+    display: flex;
+    justify-content: space-between; /* Space items evenly */
+    align-items: center; /* Align items vertically in the center */
+    margin-top: 20px;
+    padding: 1px;
+    height: 40px;
+    width: 720px;
+    background-color: white;
     border-radius: 7px;
     margin-right: 490px;
-    margin-left: 30px;
+    margin-left: 10px;
 }
 
-.input-field {
-    margin-top: 40px;
+.content label,
+.content input,
+.input-field1 {
+    margin-right: 10px; /* Add space between elements */
 }
 
-.price-info {
+.input-field1 select {
+    width: 180px; /* Adjust width as needed */
+}
+.text-area {
     display: flex;
+    float: left;
+    width: calc(50% - 160px); /* Set width to 50% minus the gap */
+    margin-right: 20px; /* Adjust the margin as needed */
+    margin-bottom: 20px; /* Add margin bottom to create space */
+}
+
+.preview-area {
+    display: flex;
+    float: left;
+    width: calc(50% - 140px); /* Set width to 50% minus the gap */
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+/* Clear the float to prevent content below from floating around the floated elements */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.calendar-container {
+    display: flex;
+    float: left;    
+    width: calc(10% - 40px); /* Set width to 50% minus the gap */
+}
+.price-info {
+    justify-content:center;
+    align-items: center;
     flex-direction: row;
-    justify-content: center;
-    height: 20px;
-    width: 800px;
+    height: 40px;
+    width: 900px;
     background-color: white;
     border-radius: 5px;
+    margin-top: 20px;
     margin-left: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
 }
 .price-info-text p{
@@ -75,25 +144,30 @@ select {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    height: 50px;
+    height: 60px;
     background-color: white;
     border-radius: 5px;
-    margin-top: 30px;
-    width: 800px;
+    margin-top: 20px;
+    width: 850px;
 }
 
 .upload p,
-label {
-    display: inline;
-    vertical-align: middle;
+label input {
     margin: 0px 10px;
 }
 
 .upload-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     background-color: #007bff;
     color: #fff;
     padding: 5px 10px;
+    width: 180px;
+    height: 30px;
+    margin-top: 10px;
+    margin-left: 5px;
     border-radius: 5px;
 }
 
@@ -105,8 +179,9 @@ label {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    width: 700px;
+    width: 90%; /* Adjust width as needed */
     background-color: white;
+    overflow-x: auto; /* Add horizontal scroll if content exceeds width */
 }
 
 .table-content-box h3 {
@@ -122,51 +197,37 @@ label {
     border-collapse: collapse;
 }
 
+.table-content-box table th,
 .table-content-box table td {
     padding: 10px;
     margin-right: 10px;
     border-bottom: 1px solid #ccc;
-}
-
-.table-content-box table td:first-child {
-    font-weight: bold;
-    width: 20%;
-}
-
-.table-content-box table td:last-child {
     text-align: left;
 }
 
-.table-content-box table tr:last-child td {
-    border-bottom: none; /* Remove border-bottom for the last row */
+.table-content-box table th {
+    font-weight: bold;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
-.preview {
-    margin-top: 150px;
-  
+.table-content-box table td:last-child {
+    border-bottom: none; /* Remove border-bottom for the last cell in each row */
+}
+.composepage-btn { 
+    margin-left: 860px;
+    margin-top: 20px; /* Adjust the margin-top value as needed */
 }
 
-.custom-calendar {
-    margin-right: 100px;
-    margin-top: 550px;
+.composepage-btn button {
+    padding: 10px 20px; /* Adjust padding for button */
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add border radius */
+    cursor: pointer; /* Change cursor on hover */
 }
-.composepage-btn button{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 300px;
-    width: 180px;
-    height: 30px;
-    outline: none;
-    border: 1px solid #7a7a7a;
-    border-radius: 75px;
-    color: #515151;
-    font-size: 15px;
-    font-weight: 400;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+
+.composepage-btn button:hover {
+    background-color: #0056b3; /* Change background color on hover */
 }
-.composepage-btn button:hover{
-    background-color: #0056b3;
-}
+

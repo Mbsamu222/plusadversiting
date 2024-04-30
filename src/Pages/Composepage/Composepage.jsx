@@ -20,7 +20,6 @@ const CustomCalendar = () => {
 
     return (
         <div className="custom-calendar">
-            <p>Select Ads Date Calendar</p>
             <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -76,7 +75,7 @@ const ComposePage = () => {
     const [isBoldText, setIsBoldText] = useState(false);
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
     const colorOptions = [
-        { value: '#ffffff', label: 'White' },
+        { value: '#ffffff', label: 'No BG Color' },
         { value: '#ccffff', label: 'Light Blue' },
         { value: '#cefdd0', label: 'Light Green' },
         { value: '#feccc9', label: 'Light Pink' },
@@ -86,8 +85,8 @@ const ComposePage = () => {
 
     useEffect(() => {
         setSelectedInputLabel(params.get('selectedInputLabel') || '');
-    }, [location.search,params]);
-    
+    }, [location.search, params]);
+
 
 
     const handleTickBoxChange = (e) => {
@@ -99,6 +98,10 @@ const ComposePage = () => {
         const updatedTextAreaValue = isChecked ? tickSymbol + textAreaValue.slice(tickSymbol.length) : textAreaValue.slice(tickSymbol.length);
         setTextAreaValue(updatedTextAreaValue);
         setPreviewContent(updatedTextAreaValue); // Update preview content
+
+        const tickPrice = isChecked ? 310 : 0;
+        const totalPriceWithTick = basePrice + tickPrice + extraPrice * extraCharacters;
+        setTotalPrice(totalPriceWithTick);
     };
 
     const handleBoldText = () => {
@@ -107,6 +110,10 @@ const ComposePage = () => {
         const updatedTextAreaValue = !isBoldText ? textAreaValue.toUpperCase() : textAreaValue.toLowerCase();
         setTextAreaValue(updatedTextAreaValue);
         setPreviewContent(updatedTextAreaValue);
+
+        const boldPrice = isBoldText ? 0 : basePrice * 0.3;
+        const totalPriceWithBold = basePrice + boldPrice + extraPrice * extraCharacters;
+        setTotalPrice(totalPriceWithBold);
     };
 
 
@@ -231,12 +238,6 @@ const ComposePage = () => {
 
         // Split the text into words and capitalize the first two letters of each word
 
-
-
-
-
-
-
         // Set the total price, extra characters, and extra price in state
 
         setTotalPrice(totalPrice);
@@ -246,6 +247,11 @@ const ComposePage = () => {
 
     const handleBgColorChange = (e) => {
         setSelectedBgColor(e.target.value);
+
+        const bgColorPrice = basePrice * 0.1;
+        const totalPriceWithBgColor = basePrice + bgColorPrice + extraPrice * extraCharacters;
+        setTotalPrice(totalPriceWithBgColor);
+
     };
 
 
@@ -255,7 +261,7 @@ const ComposePage = () => {
         <div className='package'>
             <div>
                 <div className="side menu">
-                    <h3>YOUR PACKAGE</h3>
+                    <h3>Your Package</h3>
                     <div>
                         <label htmlFor="selectedPublication"></label>
                         <select
@@ -298,17 +304,15 @@ const ComposePage = () => {
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div class="select-input-label">
                         {selectedInputLabel && (
                             <span style={{ marginLeft: '5px' }}>{selectedInputLabel}</span>
                         )}
                     </div>
                 </div>
-            </div>
-
-            <div>
                 <div>
                     <div className="container">
+                        <h3> Select SubCategorys</h3>
                         <div className="input-field">
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
@@ -345,11 +349,23 @@ const ComposePage = () => {
                         )}
                     </div>
                 </div>
-                <div className="content">
-                    <div className="horizonital-line-box">
-                        <p>Write Below Text Area</p>
-                    </div>
+            </div>
+
+            <div>
+                <div className="marquee-container">
                     <div>
+                        {/* Selected elements with marquee animation */}
+                        <span>{selectedPublication}</span>
+                        <span>-{selectedCategory}</span>
+                        <span>-{selectedEdition}</span>
+                        <span>-{selectedSubCategory1}</span>
+                        <span>-{selectedSubCategory2}</span>
+                        <span>-Extra Lines: {extraCharacters}</span>
+                        <span>-Total Amount: Rs. {totalPrice}</span>
+                    </div>
+                </div>
+                <div>
+                    <div className="content">
                         <label htmlFor="addTick">Add Tick</label>
                         <input
                             type="checkbox"
@@ -357,8 +373,6 @@ const ComposePage = () => {
                             checked={isTickAdded}
                             onChange={handleTickBoxChange}
                         />
-                    </div>
-                    <div>
                         <label htmlFor="addBold">Add Bold</label>
                         <input
                             type="checkbox"
@@ -366,10 +380,8 @@ const ComposePage = () => {
                             checked={isBoldText}
                             onChange={handleBoldText}
                         />
-                    </div>
-                    <div>
-                        <div className="input-field">
-                            <label htmlFor="bgColor">BG Color</label>
+                        <div className="input-field1">
+                            <label htmlFor="bgColor">BG Color( Extra Price Appicable)</label>
                             <select
                                 id="bgColor"
                                 value={selectedBgColor}
@@ -382,100 +394,89 @@ const ComposePage = () => {
                                 ))}
                             </select>
                         </div>
-
                     </div>
-                    <div className="input-field">
-                        <label htmlFor="textArea"></label>
-                        <textarea
-                            id="textArea"
-                            rows={12.5}
-                            cols={45}
-                            placeholder="Sample Ads... Requires male/female Sales Coordinator, English speaking Telecallers and Computer typist. Good Salary. Walkin FF-20, Palika Bazar GT Road Ghaziabad."
-                            value={textAreaValue}
-                            onChange={handleTextAreaChange}
-                            style={{ backgroundColor: selectedBgColor,fontWeight: isBoldText ? 'bold' : 'normal' }}
-                            disabled={!selectedSubCategory1 || !selectedSubCategory2}
-                        />
-                    </div>
-                    <div className="price-info">
-                        <PriceInfo
-                            basePrice={basePrice}
-                            extraCharacters={extraCharacters}
-                            extraPrice={extraPrice}
-                            totalPrice={totalPrice}
-                        />
-                    </div>
-                    <div className='upload'>
-                        <p>Note: For certain ads, supporting documents will be required by the publication house. You will be contacted for the same. Upload now or send on <a href="mailto:sales@plusadversiting@gmail.com">sales@plusadversiting@gmail.com</a></p>
-                        <input type="file" id="fileUpload" />
-                        <label htmlFor="fileUpload" className="upload-button">Upload File</label>
-                    </div>
+                    <div>
+                        <div className="horizonital-line-box">
+                            <h3>Write Below Text Area</h3>
+                        </div>
+                        <div>
+                            <div>
+                                <div className="text-area">
+                                    <label htmlFor="textArea"></label>
+                                    <textarea
+                                        id="textArea"
+                                        rows={12.5}
+                                        cols={45}
+                                        placeholder="Sample Ads... Requires male/female Sales Coordinator, English speaking Telecallers and Computer typist. Good Salary. Walkin FF-20, Palika Bazar GT Road Ghaziabad."
+                                        value={textAreaValue}
+                                        onChange={handleTextAreaChange}
+                                        style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
+                                        disabled={!selectedSubCategory1 || !selectedSubCategory2}
+                                    />
+                                </div>
+                            </div>
 
-                    <div className="table-content-box">
-                        <h3>Selected Content</h3>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Selected Publication:</td>
-                                    <td>{selectedPublication}</td>
-                                </tr>
-                                <tr>
-                                    <td>Selected Category:</td>
-                                    <td>{selectedCategory}</td>
-                                </tr>
-                                <tr>
-                                    <td>Selected Edition:</td>
-                                    <td>{selectedEdition}</td>
-                                </tr>
-                                <tr>
-                                    <td>Selected Subcategory 1:</td>
-                                    <td>{selectedSubCategory1}</td>
-                                </tr>
-                                <tr>
-                                    <td>Selected Subcategory 2:</td>
-                                    <td>{selectedSubCategory2}</td>
-                                </tr>
-                                <tr>
-                                    <td>Typed Text:</td>
-                                    <td>{textAreaValue}</td>
-                                </tr>
-                                <tr>
-                                    <td>Extra Lines:</td>
-                                    <td>{extraCharacters}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Amount:</td>
-                                    <td>Rs. {totalPrice}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                            <div className="preview-area">
+                                <textarea
+                                    id="previewTextArea"
+                                    rows={10}
+                                    cols={35}
+                                    placeholder='Ads Preview...'
+                                    value={previewContent}
+                                    readOnly
+                                    style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
+                                    disabled={!selectedSubCategory1 || !selectedSubCategory2}
+                                />
+                            </div>
+                            <div className="calendar-container">
+                                {/* Include CustomCalendar component here */}
+                                <CustomCalendar />
 
-
-                </div>
-
-            </div>
-            <div className="preview">
-                <h3>Preview</h3>
-                <textarea
-                    id="previewTextArea"
-                    rows={10}
-                    cols={35}
-                    placeholder='Ads Preview...'
-                    value={previewContent}
-                    readOnly
-                    style={{ backgroundColor: selectedBgColor,  fontWeight: isBoldText ? 'bold' : 'normal' }}
-                    disabled={!selectedSubCategory1 || !selectedSubCategory2}
-                />
-            </div>
-
-            <div>
-                {/* Include CustomCalendar component here */}
-                <CustomCalendar />
-
-                <div>
-                    <div className="composepage-btn">
-                        <button type='button'> Proceed To Payment </button>
+                            </div>
+                        </div>
+                        <div className='upload'>
+                            <p>Note: For certain ads, supporting documents will be required by the publication house. You will be contacted for the same. Upload now or send on <a href="mailto:sales@plusadversiting@gmail.com">sales@plusadversiting@gmail.com</a></p>
+                            <input type="file" id="fileUpload" />
+                            <label htmlFor="fileUpload" className="upload-button">Upload File</label>
+                        </div>
+                        <div className="price-info">
+                            <PriceInfo
+                                basePrice={basePrice}
+                                extraCharacters={extraCharacters}
+                                extraPrice={extraPrice}
+                                totalPrice={totalPrice}
+                            />
+                        </div>
+                        <div className="table-content-box">
+                            <h3>Selected Content</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Publication</th>
+                                        <th>Category</th>
+                                        <th>Edition</th>
+                                        <th>Subcategory 1</th>
+                                        <th>Subcategory 2</th>
+                                        <th>Extra Lines</th>
+                                        <th>Total Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{selectedPublication}</td>
+                                        <td>{selectedCategory}</td>
+                                        <td>{selectedEdition}</td>
+                                        <td>{selectedSubCategory1}</td>
+                                        <td>{selectedSubCategory2}</td>
+                                        <td>{extraCharacters}</td>
+                                        <td>Rs. {totalPrice}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="composepage-btn">
+                            <button type='button'> Proceed To Payment </button>
+                        </div>
                     </div>
                 </div>
             </div>
