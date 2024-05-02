@@ -7,6 +7,7 @@ import Home from './Pages/Home';
 import HomeCategory from './Pages/HomeCategory';
 import LoginSignup from './Pages/LoginSignup';
 import Composepage from '../src/Pages/Composepage/Composepage'
+import Paymentpage from './Pages/Paymentpage';
 
 
 
@@ -21,8 +22,11 @@ function App() {
           <Route path='/contactus' element={<HomeCategory category='CONTACTUS' />} />
           <Route path='/loginsignup' element={<LoginSignup />} />
 
-          <Route path="/" element={<Dropdown />} /> {/* No need for exact in v6 */}
+          <Route path="/" element={<Dropdown />} />
           <Route path="/compose" element={<Composepage />} />
+          <Route path="/paymentpage" element={<Paymentpage />} />
+
+
         </Routes>
       </Router>
     </div>

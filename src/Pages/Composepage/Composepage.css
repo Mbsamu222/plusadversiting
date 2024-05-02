@@ -178,7 +178,7 @@ label input {
     margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
+    padding: 5px;
     width: 90%; /* Adjust width as needed */
     background-color: white;
     overflow-x: auto; /* Add horizontal scroll if content exceeds width */

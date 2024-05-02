@@ -31,6 +31,7 @@ const Dropdown = () => {
 
     const getEditionOptions = () => {
         if (selectedPublication === 'THE HINDU' && selectedCategory === 'Matrimonial') {
+
             return [
                 { value: 'Chennai Edition', label: 'Chennai Edition', disabled: true },
                 { value: 'All Edition', label: 'All Edition', disabled: false },
@@ -50,12 +51,16 @@ const Dropdown = () => {
         setSelectedEdition('');
         setShowDropdown2(true);
         setShowDropdown3(selectedCategory !== '');
+
     };
 
     const handleSelectCategory = (e) => {
         setSelectedCategory(e.target.value);
-        setSelectedEdition('');
+        setSelectedEdition(e.target.value === 'Matrimonial' ? 'All Edition' : selectedEdition);
         setShowDropdown3(true);
+        setShowImagePopup1(true);
+        setShowImagePopup2(true);
+        setShowImagePopup3(true);
     };
 
     const handleSelectEdition = (e) => {
@@ -83,7 +88,7 @@ const Dropdown = () => {
 
     useEffect(() => {
         setIsNextButtonDisabled(!(selectedPublication && selectedCategory && selectedEdition && selectedImageType));
-    }, [selectedPublication, selectedCategory, selectedEdition, selectedImageType]);
+    }, [selectedPublication, selectedCategory, selectedEdition,selectedImageType]);
 
 
     const editionOptions = getEditionOptions();
