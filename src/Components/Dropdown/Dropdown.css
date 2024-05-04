@@ -1,15 +1,14 @@
+/* Default styles */
 .dropdown {
   height: 60vh;
   background: linear-gradient(to left, #e8ebf0 0%, #3c8cee, #fd1490 87%);
   display: flex;
-}
-.dropdown {
-  position: relative; /* Ensure relative positioning for absolute elements inside */
+  position: relative;
 }
 
 .dropdown-field {
   display: flex;
-  gap: 100px; /* Adjust the gap between select elements */
+  gap: 100px;
   padding: 100px;
   align-items: center;
   padding-left: 160px;
@@ -27,18 +26,19 @@
   position: absolute;
   top: 35%;
   left: 50%;
-  transform: translate(-50%, 10px); /* Adjust the vertical positioning */
-  background-color: #fff; /* Optional: Add a background color for better visibility */
+  transform: translate(-50%, 10px);
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow for a raised effect */
-  z-index: 1000; /* Ensure the popup is above other content */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
+
 .image-popup {
   display: flex;
   justify-content: center;
   gap: 30px;
-  flex-wrap: wrap; /* Allow items to wrap to a new line */
+  flex-wrap: wrap;
 }
 
 .image-option {
@@ -49,16 +49,17 @@
 }
 
 .image-popup img {
-  width: 175px; /* Adjust as needed */
+  width: 175px;
   margin-right: 10px;
 }
 
 .image-option input[type="radio"],
 .image-option label {
-    display: inline;
-    vertical-align: middle; /* Align input and label vertically */
-    margin-right: 5px;
+  display: inline;
+  vertical-align: middle;
+  margin-right: 5px;
 }
+
 .dropdown-btn button {
   border-radius: 5px;
   padding: 10px 30px;
@@ -68,14 +69,147 @@
   border: none;
   font-size: 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Add transition for smoother color change */
+  transition: background-color 0.3s ease;
 }
 
 .dropdown-btn button:disabled {
-  background-color: #ccc; /* Set disabled background color */
-  cursor: not-allowed; /* Change cursor for disabled state */
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .dropdown-btn button:hover:not(:disabled) {
-  background-color: #0056b3; /* Hover color for enabled button */
+  background-color: #0056b3;
 }
+
+/* Media Queries for responsive design */
+
+/* For screens larger than 1280px */
+@media (min-width: 1281px) {
+  .dropdown-field {
+    padding: 50px;
+    padding-left: 160px;
+  }
+
+  .dropdown-field select {
+    width: 300px;
+    gap: 50px;
+  }
+
+  .image-popup img {
+    width: 175px;
+  }
+
+  .dropdown-btn button {
+    padding: 10px 30px;
+    font-size: 15px;
+  }
+}
+
+/* For screens between 1025px and 1280px */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .dropdown-field {
+    padding: 40px;
+    padding-left: 140px;
+  }
+
+  .dropdown-field select {
+    width: 220px;
+  }
+
+  .image-popup img {
+    width: 160px;
+  }
+
+  .dropdown-btn button {
+    padding: 10px 28px;
+    font-size: 14px;
+  }
+}
+
+/* For screens between 801px and 1024px */
+@media (min-width: 801px) and (max-width: 1024px) {
+  .dropdown-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    padding-left: 120px;
+  }
+
+  .dropdown-field select {
+    width: 180px;
+  }
+
+  .dropdown-field select:focus {
+    /* Display options vertically */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 7px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+  }
+
+  .image-popup img {
+    width: 140px;
+  }
+
+  .dropdown-btn button {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+}
+
+/* For screens up to 800px */
+@media (max-width: 800px) {
+  .dropdown-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    padding-left: 120px;
+  }
+
+  .dropdown-field select {
+    width: 180px;
+    gap: 5px;
+  }
+
+  .image-popup img {
+    width: 120px;
+  }
+
+  .dropdown-btn button {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+}
+
+/* For screens up to 500px */
+@media (max-width: 500px) {
+  .dropdown-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    padding-left: 120px;
+    margin-top: 5px;
+  }
+
+  .dropdown-field select {
+    width: 140px;
+    gap: 5px;
+  }
+
+  .image-popup img {
+    width: 100px;
+  }
+
+  .dropdown-btn button {
+    padding: 6px 16px;
+    font-size: 12px;
+  }
+}
+

@@ -4,9 +4,11 @@ import logo from '../Assests/logo.png'
 import { Link } from 'react-router-dom';
 
 
+
 const Navbar = () => {
 
    const [menu,setMenu] = useState("HOME");
+
 
   return (
     <div className='navbar'>
