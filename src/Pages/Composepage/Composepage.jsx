@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Popup from 'reactjs-popup';
 import './Composepage.css';
 import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import { Link } from 'react-router-dom';
+import the_hindu_logo from '../Assests/the_hindu_logo.jpg'
 
 
 
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedSunday, setSelectedSunday] = useState(null);
+    const [selectedSundays, setSelectedSundays] = useState(null);
+    const [showPopup, setShowPopup] = useState(false);
 
     // Function to check if a date is a Sunday
     const isSunday = (date) => {
@@ -25,12 +28,31 @@ const CustomCalendar = () => {
     // Function to handle date selection and set selected Sunday
     const handleDateSelect = (date) => {
         setSelectedDate(date);
+        setShowPopup(false);
+
         if (isSunday(date)) {
-            setSelectedSunday(date);
+            const nextSundays = [date];
+            for (let i = 1; i < 4; i++) {
+                const nextSunday = new Date(date);
+                nextSunday.setDate(date.getDate() + i * 7); // Increment by 7 days for next Sunday
+                nextSundays.push(nextSunday);
+            }
+            setSelectedSundays(nextSundays);
+            setShowPopup(true);
         } else {
-            setSelectedSunday(null);
+            setSelectedSundays([]);
         }
     };
+
+
+    const handleSelectOption = (option) => {
+        // Handle the selection of one Sunday date and the next 3 Sundays
+        setSelectedDate(option);
+        setShowPopup(false);
+        // Optionally, you can perform additional logic based on the selected option
+    };
+
+
 
     return (
         <div className="custom-calendar">
@@ -44,11 +66,24 @@ const CustomCalendar = () => {
                 dateFormat="dd/MM/yyyy"
                 inline
             />
-            {selectedSunday && (
-                <div className="selected-sunday">
-                    Selected Date: {selectedSunday.toLocaleDateString('en-US')}
+            <Popup
+                trigger={<div className="popup-trigger"></div>}
+                position="left "
+                open={showPopup}
+                onClose={() => setShowPopup(false)}
+            >
+                <div className="modal-content">
+                    <p>Select 1 Date + After 3 Dates Applied for 50% Offer</p>
+                    <ul>
+                        {selectedSundays &&
+                            selectedSundays.map((sunday, index) => (
+                                <li key={index} onClick={() => handleSelectOption(sunday)}>
+                                    {sunday.toLocaleDateString('en-US')}
+                                </li>
+                            ))}
+                    </ul>
                 </div>
-            )}
+            </Popup>
         </div>
     );
 };
@@ -94,6 +129,7 @@ const ComposePage = () => {
     const [extraCharacters, setExtraCharacters] = useState(0); // State to store extra characters
     const [isTickAdded, setIsTickAdded] = useState(false); // State to track if tick is added
     const [isBoldText, setIsBoldText] = useState(false);
+    const [paymentOption, setPaymentOption] = useState('');
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
@@ -286,12 +322,19 @@ const ComposePage = () => {
         }
     };
 
+    const handlePaymentOptionChange = (e) => {
+        setPaymentOption(e.target.value);
+    };
+
 
     const editionOptions = getEditionOptions();
 
     return (
         <div className='package'>
-            <div>
+            <div className='composepage-left'>
+                <div className='page-logo'>
+                    <img src={the_hindu_logo} alt="" />
+                </div>
                 <div className="side menu">
                     <h3>Your Package</h3>
                     <div>
@@ -342,7 +385,6 @@ const ComposePage = () => {
                         )}
                     </div>
                 </div>
-
                 <div className='upload'>
                     <p>Note: For certain ads, supporting documents will be required by the publication house. You will be contacted for the same. Upload now or send on <a href="mailto:sales@plusadversiting@gmail.com">sales@plusadversiting@gmail.com</a></p>
                     <input type="file" id="fileUpload" />
@@ -368,7 +410,7 @@ const ComposePage = () => {
                 </div>
                 <div>
                     <div className="container">
-                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>Select SubCategorys</h3>
+                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>Select SubCategorys:</h3>
                         <div className="input-field">
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
@@ -377,7 +419,7 @@ const ComposePage = () => {
                                 onChange={handleSubCategory1Change}
                                 disabled={!selectedPublication || !selectedCategory || selectedCategory !== 'Matrimonial' || selectedEdition !== 'All Edition'}
                             >
-                                <option value="">-Subcategory -1</option>
+                                <option value="">Subcategory-1</option>
                                 {subCategory1Options.map((option) => (
                                     <option key={option.value} value={option.value}>
                                         {option.label}
@@ -404,40 +446,39 @@ const ComposePage = () => {
                             </div>
                         )}
                     </div>
-                    <div>
-                        <div className="horizonital-line-box">
-                            <h3>Write Below Text Area</h3>
-                        </div>
-                        <div className="text-area">
-                            <label htmlFor="textArea"></label>
-                            <textarea
-                                id="textArea"
-                                rows={12.5}
-                                cols={45}
-                                placeholder="Sample Ads... ✓ Requires male/female Sales Coordinator, English speaking Telecallers and Computer typist. Good Salary. Walkin FF-20, Palika Bazar GT Road Ghaziabad."
-                                value={textAreaValue}
-                                onChange={handleTextAreaChange}
-                                style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
-                                disabled={!selectedSubCategory1 || !selectedSubCategory2}
-                            />
-                        </div>
-                        <div className="preview-area">
-                            <textarea
-                                id="previewTextArea"
-                                rows={10}
-                                cols={35}
-                                placeholder='Ads Preview...'
-                                value={previewContent}
-                                readOnly
-                                style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
-                                disabled={!selectedSubCategory1 || !selectedSubCategory2}
-                            />
-                        </div>
-                        <div className="calendar-container">
-                            {/* Include CustomCalendar component here */}
-                            <CustomCalendar />
-                        </div>
+                    <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        <h3>Compose Area</h3>
                     </div>
+                    <div className={`text-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        <label htmlFor="textArea"></label>
+                        <textarea
+                            id="textArea"
+                            rows={12.5}
+                            cols={45}
+                            placeholder="Sample Ads... ✓ Requires male/female Sales Coordinator, English speaking Telecallers and Computer typist. Good Salary. Walkin FF-20, Palika Bazar GT Road Ghaziabad."
+                            value={textAreaValue}
+                            onChange={handleTextAreaChange}
+                            style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
+                            disabled={!selectedSubCategory1 || !selectedSubCategory2}
+                        />
+                    </div>
+                    <div className={`preview-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        <textarea
+                            id="previewTextArea"
+                            rows={10}
+                            cols={35}
+                            placeholder='Ads Preview...'
+                            value={previewContent}
+                            readOnly
+                            style={{ backgroundColor: selectedBgColor, fontWeight: isBoldText ? 'bold' : 'normal' }}
+                            disabled={!selectedSubCategory1 || !selectedSubCategory2}
+                        />
+                    </div>
+                    <div className={`calendar-container ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        {/* Include CustomCalendar component here */}
+                        <CustomCalendar />
+                    </div>
+
                     <div className="content">
                         <label htmlFor="addTick">Add Tick</label>
                         <input
@@ -454,7 +495,7 @@ const ComposePage = () => {
                             onChange={handleBoldText}
                         />
                         <div className="input-field1">
-                            <label htmlFor="bgColor">BG Color( Extra Price Appicable)</label>
+                            <label htmlFor="bgColor">BG Color(Extra Price)</label>
                             <select
                                 id="bgColor"
                                 value={selectedBgColor}
@@ -468,54 +509,81 @@ const ComposePage = () => {
                             </select>
                         </div>
                     </div>
-                </div>
-                <div className="price-info">
-                    <PriceInfo
-                        basePrice={basePrice}
-                        extraCharacters={extraCharacters}
-                        extraPrice={extraPrice}
-                        totalPrice={totalPrice}
-                    />
-                </div>
-                <div className="table-content-box">
-                    <h3>Selected Content</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Publication</th>
-                                <th>Category</th>
-                                <th>Edition</th>
-                                <th>Subcategory 1</th>
-                                <th>Subcategory 2</th>
-                                <th>Extra Lines</th>
-                                {/* Conditionally render additional labels based on checkbox states */}
-                                {isTickAdded && <th>Add Tick</th>}
-                                {isBoldText && <th>Add Bold</th>}
-                                {selectedBgColor !== '#ffffff' && <th>Add BG Color</th>}
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{selectedPublication}</td>
-                                <td>{selectedCategory}</td>
-                                <td>{selectedEdition}</td>
-                                <td>{selectedSubCategory1}</td>
-                                <td>{selectedSubCategory2}</td>
-                                <td>{extraCharacters}</td>
-                                {/* Conditionally render additional data based on checkbox states */}
-                                {isTickAdded && <td>Tick added</td>}
-                                {isBoldText && <td>Bold text</td>}
-                                {selectedBgColor !== '#ffffff' && <td>{selectedBgColor}</td>}
-                                <td>Rs. {totalPrice}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="composepage-btn">
-                    <Link to="/paymentpage">
-                        <button type="button">Proceed To Payment</button>
-                    </Link>
+                    <div className="price-info">
+                        <PriceInfo
+                            basePrice={basePrice}
+                            extraCharacters={extraCharacters}
+                            extraPrice={extraPrice}
+                            totalPrice={totalPrice}
+                        />
+                    </div>
+                    <div className="table-content-box">
+                        <h3>Selected Content</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Publication</th>
+                                    <th>Category</th>
+                                    <th>Edition</th>
+                                    <th>Subcategory 1</th>
+                                    <th>Subcategory 2</th>
+                                    <th>Extra Lines</th>
+                                    {/* Conditionally render additional labels based on checkbox states */}
+                                    {isTickAdded && <th>Add Tick</th>}
+                                    {isBoldText && <th>Add Bold</th>}
+                                    {selectedBgColor !== '#ffffff' && <th>Add BG Color</th>}
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{selectedPublication}</td>
+                                    <td>{selectedCategory}</td>
+                                    <td>{selectedEdition}</td>
+                                    <td>{selectedSubCategory1}</td>
+                                    <td>{selectedSubCategory2}</td>
+                                    <td>{extraCharacters}</td>
+                                    {/* Conditionally render additional data based on checkbox states */}
+                                    {isTickAdded && <td>Tick added</td>}
+                                    {isBoldText && <td>Bold text</td>}
+                                    {selectedBgColor !== '#ffffff' && <td>{selectedBgColor}</td>}
+                                    <td>Rs. {totalPrice}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="payment-options">
+                        <p className="payment-info-box"></p>
+                        <div>
+                            <input
+                                type="radio"
+                                id="nilTransaction"
+                                name="paymentOption"
+                                value="nilTransaction"
+                                checked={paymentOption === 'nilTransaction'}
+                                onChange={handlePaymentOptionChange}
+                            />
+                            <label htmlFor="nilTransaction">Nill Transaction Charges for payment (G Pay, Bank Transfer (IMPS))</label>
+                        </div>
+                        <p className="payment-options-or">(or)</p>
+                        <p className="payment-info-box"></p>
+                        <div>
+                            <input
+                                type="radio"
+                                id="paymentGateway"
+                                name="paymentOption"
+                                value="paymentGateway"
+                                checked={paymentOption === 'paymentGateway'}
+                                onChange={handlePaymentOptionChange}
+                            />
+                            <label htmlFor="paymentGateway">Payment Gateway (2.5% Extra Charges)</label>
+                        </div>
+                    </div>
+                    <div className="composepage-btn">
+                        <Link to="/paymentpage">
+                            <button type="button">Proceed To Payment</button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

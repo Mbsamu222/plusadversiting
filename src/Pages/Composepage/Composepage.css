@@ -3,18 +3,16 @@
     justify-content: space-around;
     align-items: flex-start;
     height: 100vh;
-    background: linear-gradient(to left, #e8ebf0 0%, #3c8cee, #fd1490 87%);
-    display: flex;
-
+    background:white;
 }
 
 .marquee-container {
     white-space: nowrap;
     overflow: hidden;
     animation: marquee 35s linear infinite;
-    color: black;
+    color:#3c8cee ;
     font-size: large;
-    font-weight: 600;
+    font-weight: 900;
     margin-top: 10px;
 }
 
@@ -27,18 +25,31 @@
         transform: translateX(-100%);
     }
 }
+.composepage-left{
+    height: 100vh;
+    margin-right: 15px;
+   background-color: #fd1490;
+}
+.page-logo {
+    display: flex;
+    margin-left: 60px;
+    margin-top: 80px;
+    
 
+}
 .side.menu {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 300px;
     /* Adjust width as needed */
-    margin-top: 80px;
+    margin-top: 30px;
+    margin-right: 20px;
 }
 
 .side.menu h3 {
-    color: white;
+    font-size: 20px;
+    color:white  ;
 }
 
 .side.menu label,
@@ -63,13 +74,14 @@ select {
 }
 
 .container h3 {
-    color: white;
+    font-size: 25px;
+    color: #fd1490 ;
 }
 
 .horizonital-line-box {
-    margin: 20px auto;
+    margin: 10px auto;
     /* Center horizontally with top and bottom margin */
-    width: 180px;
+    width: 150px;
     height: 19px;
     font-size: 14px;
     background-color: white;
@@ -78,31 +90,32 @@ select {
     margin-bottom: 10px;
     margin-left: 5px;
 }
-
 .content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
     padding: 1px;
     height: 40px;
-    width: 720px;
-    /* Adjust width as needed */
-    background-color: white;
+    width: calc(650px - 10px);
+    background-color: #3c8cee;
+    color: white;
+    font-weight: 600;
     border-radius: 7px;
-    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    margin-left: 5px;
 }
 
 .content label,
 .content input,
 .input-field1 {
-    margin-right: 10px;
-    /* Add space between elements */
-    padding-left: 20px;
+    margin-right: 5px;
+    padding-left: 30px;
+    
 }
 
 .input-field1 select {
-    width: 180px;
+    width: 150px;
     /* Adjust width as needed */
 }
 
@@ -127,85 +140,92 @@ select {
 }
 
 .text-area {
-    display: flex;
-    float: left;
     width: calc(33.33% - 10px);
-    /* Set width to 33.33% minus the gap */
-    margin-right: 10px;
-    /* Adjust margin if needed */
-    margin-bottom: 20px;
-}
-
-/* Clear the float to prevent content below from floating around the floated elements */
-.clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-.preview-area {
-    display: flex;
     float: left;
-    width: calc(100% - 10px);
-    /* Set width to 50% minus the gap */
-    margin-right: 10px;
-    margin-top: 5px;
-    
+    margin-right: 5px;
+    margin-bottom: -45px;
 }
 
-/* Clear the float to prevent content below from floating around the floated elements */
-.clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
+.preview-area {
+    width: calc(33.33% - 20px);
+    float: left;
+    margin-right: 0px;
+    margin-bottom: -45px;
 }
 
 .calendar-container {
-    display: flex;
+    width: calc(33.33% - 20px);
     float: left;
-    width: calc(50% - 10%);
-    /* Set width to 50% minus the gap */
-    margin-right: 10px;
-    margin-top: 10px;
+    margin-right: 0px;
+    margin-top: -20px;
+    margin-bottom: -45px;
 }
-
+.disabled {
+    opacity: 0.5; /* Reduce opacity to visually disable elements */
+    pointer-events: none; /* Disable pointer events to prevent interaction */
+}
+.custom-calendar {
+    width: 100%;
+    overflow: hidden; /* Ensure proper layout */
+}
+.modal-content {
+    background-color: #fafcfa; /* White background for modal content */
+    border: 2px solid #030702;
+    width: 200%;
+    height: 100%;
+    border-radius: 0px;
+    color: rgb(5, 3, 3);
+    margin-top: -295px;
+    margin-left: -455px;
+    padding: 150px;
+    text-align: center;
+}
 .price-info {
     display: flex;
-    justify-content: space-between;
+    justify-content:space-around;
     align-items: center;
     height: 40px;
-    width: 900px;
-    background-color: white;
+    width: 925px;
+    background-color: #fd1490 ;
+    color: white;
+    font-size: medium;
+    font-weight: 600;
     border-radius: 5px;
     margin-top: 20px;
-    margin-left: 5px;
     margin-bottom: 30px;
 }
-
 
 .price-info-text p {
     display: inline-block;
     vertical-align: middle;
-    margin: 0px 5px;
+    margin: 0px 15px;
 }
-
 
 .upload {
     padding: 2px;
     margin-top: 20px;
     /* Space between price info and upload content */
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    height: 200px;
-    background-color: white;
+    flex-direction: column;
+    justify-content: center;
+    /* Center vertically */
+    align-items: center;
+    /* Center horizontally */
+    height: 230px;
+    background-color: #3c8cee;
+    color: white;
+    font-weight: 600;
     border-radius: 5px;
     margin-top: 40px;
-    width: 300px;
+    margin-left: 10px;
+    width: 275px;
 }
 
 .upload p,
 label input {
-    margin: 0px 10px;
+    justify-content: center;
+    margin: 0px 0px;
+    /* Update margin */
 }
 
 .upload-button {
@@ -216,11 +236,12 @@ label input {
     background-color: #007bff;
     color: #fff;
     padding: 5px 10px;
-    width: 180px;
+    width: 120px;
     height: 30px;
     margin: auto;
     /* Align the button in the center both horizontally and vertically */
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
     /* Add margin at the bottom for spacing */
     border-radius: 5px;
 }
@@ -229,16 +250,14 @@ label input {
     background-color: #0056b3;
 }
 
-
-
 .table-content-box {
-    margin-top: 20px;
+    margin-top: -5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
     width: 90%;
     /* Adjust width as needed */
-    background-color: white;
+    background-color:#3c8cee ;
     overflow-x: auto;
     /* Add horizontal scroll if content exceeds width */
 }
@@ -247,8 +266,9 @@ label input {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     border-bottom: 1px solid #ccc;
+    color: white;
 }
 
 .table-content-box table {
@@ -262,6 +282,7 @@ label input {
     margin-right: 10px;
     border-bottom: 1px solid #ccc;
     text-align: left;
+    color: white;
 }
 
 .table-content-box table th {
@@ -275,28 +296,62 @@ label input {
     /* Remove border-bottom for the last cell in each row */
 }
 
+.payment-options {
+    display: flex;
+    justify-content: space-between;
+    /* Align items horizontally */
+    background-color: rgb(251, 251, 59);
+    color: rgb(92, 88, 88);
+    font-weight: 600;
+    padding: 5px;
+    height: 20px;
+    border-radius: 5px;
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: -15px;
+    margin-left: 0px;
+}
+
+.payment-info-box {
+
+    align-items: center;
+    margin-top: 5px;
+}
+
+.payment-info {
+    text-align: center;
+    color: #000;
+    margin-bottom: 5px;
+}
+
+.payment-options-or {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0px;
+}
+
+.payment-options input[type="radio"] {
+    margin-right: 5px;
+}
+
 .composepage-btn {
-    margin-left: 860px;
-    margin-top: 20px;
-    /* Adjust the margin-top value as needed */
+    display: flex;
+    justify-content:flex-end;
+    /* Align items to the right */
+    margin-top: 0px;
+    margin-right: 15px;
 }
 
 .composepage-btn button {
-    padding: 10px 20px;
-    /* Adjust padding for button */
+    padding: 15px 20px;
     background-color: #007bff;
-    /* Button background color */
     color: #fff;
-    /* Text color */
     border: none;
-    /* Remove border */
+    font-size: 16px;
     border-radius: 5px;
-    /* Add border radius */
     cursor: pointer;
-    /* Change cursor on hover */
 }
 
 .composepage-btn button:hover {
     background-color: #0056b3;
-    /* Change background color on hover */
 }
