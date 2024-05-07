@@ -6,6 +6,7 @@ import './Composepage.css';
 import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import { Link } from 'react-router-dom';
 import the_hindu_logo from '../Assests/the_hindu_logo.jpg'
+import modal_logo from '../Assests/modal_logo.png'
 
 
 
@@ -73,7 +74,10 @@ const CustomCalendar = () => {
                 onClose={() => setShowPopup(false)}
             >
                 <div className="modal-content">
-                    <p>Select 1 Date + After 3 Dates Applied for 50% Offer</p>
+                    <p>Special Offers Flat 50%</p>
+                    <img src={modal_logo} alt="" />
+                    <p>Pay 1 Sunday Get Next 3 Sundays Free</p>
+                    <p>( You Pay Flats 50% Amount Only for Your Next 3 Sundays )</p>
                     <ul>
                         {selectedSundays &&
                             selectedSundays.map((sunday, index) => (
@@ -82,6 +86,10 @@ const CustomCalendar = () => {
                                 </li>
                             ))}
                     </ul>
+                    <div className='buttons-container'>
+                    <button>Yes</button>
+                    <button>No</button>
+                    </div>
                 </div>
             </Popup>
         </div>
@@ -410,7 +418,10 @@ const ComposePage = () => {
                 </div>
                 <div>
                     <div className="container">
-                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>Select SubCategorys:</h3>
+                        <div class="icon">
+                            <div class="arrow"></div>
+                        </div>
+                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>Select SubCategorys</h3>
                         <div className="input-field">
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
