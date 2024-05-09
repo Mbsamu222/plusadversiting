@@ -10,6 +10,7 @@ import modal_logo from '../Assests/modal_logo.png'
 
 
 
+
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSundays, setSelectedSundays] = useState(null);
@@ -24,6 +25,14 @@ const CustomCalendar = () => {
     const filterPassedDate = (date) => {
         const today = new Date();
         return date.getDay() === 0 && date > today;
+    };
+
+    // Function to format date as "DD/MM/YYYY"
+    const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
     };
 
     // Function to handle date selection and set selected Sunday
@@ -45,15 +54,12 @@ const CustomCalendar = () => {
         }
     };
 
-
     const handleSelectOption = (option) => {
         // Handle the selection of one Sunday date and the next 3 Sundays
         setSelectedDate(option);
         setShowPopup(false);
         // Optionally, you can perform additional logic based on the selected option
     };
-
-
 
     return (
         <div className="custom-calendar">
@@ -65,6 +71,7 @@ const CustomCalendar = () => {
                 scrollableYearDropdown
                 dropdownMode="select"
                 dateFormat="dd/MM/yyyy"
+                customInput={<CustomInput />}
                 inline
             />
             <Popup
@@ -74,27 +81,39 @@ const CustomCalendar = () => {
                 onClose={() => setShowPopup(false)}
             >
                 <div className="modal-content">
-                    <p>Special Offers Flat 50%</p>
+                    <h4>Special Offers Flat 50%</h4>
                     <img src={modal_logo} alt="" />
-                    <p>Pay 1 Sunday Get Next 3 Sundays Free</p>
+                    <p>Pay 1 Sunday 50% Offer Get Next 3 Sundays Free</p>
                     <p>( You Pay Flats 50% Amount Only for Your Next 3 Sundays )</p>
+                    <ul className='selectedDate'>
+                        {selectedDate && (
+                            <li>{formatDate(selectedDate)}</li>
+                        )}
+                        <div className='buttons-container1'>
+                            <button> Select 1 Sunday</button>
+                        </div>
+                    </ul>
                     <ul>
                         {selectedSundays &&
                             selectedSundays.map((sunday, index) => (
                                 <li key={index} onClick={() => handleSelectOption(sunday)}>
-                                    {sunday.toLocaleDateString('en-US')}
+                                    {formatDate(sunday)} {/* Format date here */}
                                 </li>
                             ))}
+                            <div className='buttons-container2'>
+                                <button> Select 4 Sundays</button>
+                            </div>
                     </ul>
-                    <div className='buttons-container'>
-                    <button>Yes</button>
-                    <button>No</button>
-                    </div>
                 </div>
             </Popup>
         </div>
     );
 };
+
+// Custom input component for DatePicker
+const CustomInput = ({ value, onClick }) => (
+    <input type="text" value={value} onClick={onClick} readOnly />
+);
 
 
 const PriceInfo = ({ basePrice, extraCharacters, extraPrice, totalPrice }) => {
@@ -138,6 +157,7 @@ const ComposePage = () => {
     const [isTickAdded, setIsTickAdded] = useState(false); // State to track if tick is added
     const [isBoldText, setIsBoldText] = useState(false);
     const [paymentOption, setPaymentOption] = useState('');
+    const [couponCode, setCouponCode] = useState('');
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
@@ -337,6 +357,16 @@ const ComposePage = () => {
 
     const editionOptions = getEditionOptions();
 
+    const handleCouponCodeChange = (e) => {
+        setCouponCode(e.target.value);
+    };
+
+    // Function to handle coupon code submission
+    const handleSubmitCouponCode = () => {
+        // You can implement logic to handle coupon code submission here
+        alert(`Coupon Code Submitted: ${couponCode}`);
+    };
+
     return (
         <div className='package'>
             <div className='composepage-left'>
@@ -529,7 +559,7 @@ const ComposePage = () => {
                         />
                     </div>
                     <div className="table-content-box">
-                        <h3>Selected Content</h3>
+                        <h3>Your Package Content</h3>
                         <table>
                             <thead>
                                 <tr>
@@ -589,6 +619,16 @@ const ComposePage = () => {
                             />
                             <label htmlFor="paymentGateway">Payment Gateway (2.5% Extra Charges)</label>
                         </div>
+                    </div>
+                    <div className="coupon-code-container">
+                        <p>Coupon Code</p>
+                        <input
+                            type="text"
+                            placeholder="Enter Coupon Code"
+                            value={couponCode}
+                            onChange={handleCouponCodeChange}
+                        />
+                        <button onClick={handleSubmitCouponCode}>Submit</button>
                     </div>
                     <div className="composepage-btn">
                         <Link to="/paymentpage">

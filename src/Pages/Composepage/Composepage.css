@@ -12,7 +12,7 @@
     animation: marquee 35s linear infinite;
     color:#3c8cee ;
     font-size: large;
-    font-weight: 900;
+    font-weight: 800;
     margin-top: 10px;
 }
 
@@ -75,7 +75,7 @@ select {
   .arrow {
     position: absolute;
     top: 12px;
-    width: 80%;
+    width: 85%;
     height: 6px;
     background-color: #3c8cee;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
@@ -114,7 +114,7 @@ select {
     }
 .container {
     display: flex;
-    gap: 30px;
+    gap: 10px;
     padding: 5px;
     align-items: center;
     padding-left: 5px;
@@ -126,7 +126,7 @@ select {
 .container h3 {
     font-size: 25px;
     color: #fd1490 ;
-    margin-left: 60px;
+    margin-left: 55px;
 }
 
 .input-field {
@@ -239,9 +239,10 @@ select {
     width: 100%;
     overflow: hidden; /* Ensure proper layout */
 }
+
 .modal-content {
-    background:rgb(255, 255, 255) ;
-    border: 5px solid #DAA520;
+    background:#ffffff;
+    border: 5px solid #d64242;
     width: 550px; /* Adjust width as needed */
     height: 450px; /* Adjust height as needed */
     border-radius: 10px;
@@ -253,13 +254,19 @@ select {
     margin-top: -155px;
     margin-left: -250px;
     padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.modal-content p:nth-child(1) {
+.modal-content h4{
     margin-top: 5px; /* Remove top margin for the first paragraph */
     color: #DAA520;
     font-size: larger;
     font-weight: 800;
+    box-shadow: 0 3px 5px #DAA520 ;
+  
 }
 
 .modal-content img {
@@ -268,36 +275,71 @@ select {
 }
 .modal-content p{
     margin-top: -10px;
-    margin-bottom: -10px;
+    margin-bottom: 5px;
     color: #DAA520;
     font-size: large;
     font-weight: 500;
 }
+
 .modal-content ul {
     list-style-type: none;
     padding: 0;
     margin: 90px 0;
-    margin-bottom: -20px;
-    color: #DAA520;
+    margin-bottom: 20px;
+    color: #ffffff;
     font-size: large;
     font-weight: 400;
-}
+    text-align: left;
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(247, 44, 44);
+    border-radius: 5px;
 
+}
+.modal-content .selectedDate {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    margin-left: 10px;
+
+}
 .modal-content ul li {
     cursor: pointer;
 }
-
-.modal-content .buttons-container {
+.modal-content .buttons-container1 {
+    /* Adjusted styles */
     display: flex;
-    justify-content: center;
-    gap: 10px; /* Adjust spacing between buttons */
-    margin-top: 20px;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right within selectedDate */
+    
 }
 
-.modal-content button {
-    width: 60px;
-    height: 30px;
-    display: inline-block; /* Display buttons inline */
+.modal-content .buttons-container2 {
+    /* Adjusted styles */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right within selectedSundays */
+}
+.modal-content .buttons-container1 button,
+.modal-content .buttons-container2 button {
+    /* Adjusted styles */
+    background-color: #DAA520;
+    font-size: 15px;
+    font-weight: 400;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px; /* Adjust padding as needed */
+    cursor: pointer;
+}
+
+.modal-content .buttons-container1 button:hover,
+.modal-content .buttons-container2 button:hover {
+    /* Hover styles */
+    background-color: #ffffff;
 }
 
 .price-info {
@@ -371,7 +413,7 @@ label input {
 }
 
 .table-content-box {
-    margin-top: -5px;
+    margin-top: -20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
@@ -453,15 +495,52 @@ label input {
 .payment-options input[type="radio"] {
     margin-right: 5px;
 }
+.coupon-code-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px; /* Add padding for spacing */
+    margin-top: 20px;
+    margin-right: 300px;
+    border-radius: 5px; /* Rounded corners for the container */
+}
+
+.coupon-code-container p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: -5px; /* Space between the "Apply Coupon Code" text and the input field */
+    color: rgb(255, 255, 255); /* White text color for the text */
+    background-color: #3c8cee;
+    height: 35px;
+    width: 140px;
+}
+
+.coupon-code-container input {
+    border: 3px solid #fd1490; /* Black border for the input field */
+    height: 20px; /* Decrease the height of the input field */
+    padding: 5px; /* Add padding for spacing inside the input field */
+}
+
+.coupon-code-container button {
+    background-color: #007bff; /* Blue color for the Submit button */
+    color: white;
+    border: none;
+    height: 35px;
+    width: 80px;
+    border-radius: 9px;
+    margin-left: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 
 .composepage-btn {
     display: flex;
     justify-content:flex-end;
     /* Align items to the right */
-    margin-top: 0px;
-    margin-right: 15px;
+    margin-top: -70px;
+    margin-right: 25px;
 }
-
 .composepage-btn button {
     padding: 15px 20px;
     background-color: #007bff;
