@@ -27,13 +27,14 @@
 }
 .composepage-left{
     height: 100vh;
+    width: 35vh;
     margin-right: 15px;
    background-color: #fd1490;
 }
 .page-logo {
     display: flex;
     margin-left: 60px;
-    margin-top: 80px;
+    margin-top: 50px;
     
 
 }
@@ -43,7 +44,7 @@
     gap: 10px;
     width: 300px;
     /* Adjust width as needed */
-    margin-top: 30px;
+    margin-top: 5px;
     margin-right: 20px;
 }
 
@@ -112,43 +113,77 @@ select {
         left: 0;
       }
     }
-.container {
-    display: flex;
-    gap: 10px;
-    padding: 5px;
-    align-items: center;
-    padding-left: 5px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    margin-right: 15px;
-}
-
-.container h3 {
-    font-size: 25px;
-    color: #fd1490 ;
-    margin-left: 55px;
-}
-
-.input-field {
-    border: 3px solid #3c8cee; /* Add border color here */
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.input-field select {
-    width: 200px; /* Adjust width as needed */
-    padding: 5px;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    color: #000000;
-}
-
-.input-field select:hover {
-    border: 1px solid #3c8cee; /* Border color on hover */
-}
-
-
+    
+    .container {
+        display: flex;
+        gap: 10px;
+        padding: 5px;
+        align-items: center;
+        padding-left: 5px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        margin-right: 15px;
+    }
+    
+    .container h3 {
+        font-size: 20px;
+        color: #fd1490;
+        margin-left: 55px;
+    }
+    
+    .input-field {
+        position: relative;
+        z-index: 0;
+        border-radius: 5px;
+        padding: 5px;
+        font-family: sans-serif;
+        font-weight: bold;
+        border: 4px solid transparent; /* Make the original border transparent */
+        overflow: hidden;
+    }
+    
+    .input-field select {
+        width: 200px; /* Adjust width as needed */
+        padding: 5px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: #000000;
+        font-weight: 600;
+        font-size: medium;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .input-field select:hover {
+        border: 2px solid #3c8cee; /* Border color on hover */
+    }
+    
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+    
+    .blinking {
+        animation: blinkBorder 1s linear infinite; /* Apply the blinking animation */
+    }
+    
+    .static {
+        border: 4px solid #fd1490; /* Static border color */
+    }
+    
+    .default-border {
+        border: 4px solid #fd1490; /* Default border color */
+    }
+    
+    @keyframes blinkBorder {
+        0%, 49.9%, 100% {
+            border-color: #fd1490;
+        }
+        50%, 99.9% {
+            border-color: #3c8cee;
+        }
+    }
+    
 .horizonital-line-box {
     margin: 10px auto;
     /* Center horizontally with top and bottom margin */
@@ -223,12 +258,74 @@ select {
     margin-right: 0px;
     margin-bottom: -45px;
 }
-
+.preview-area p{
+    margin-top: -30px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    width: 120px;
+    height: 19px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: rgb(251, 251, 59);
+    border-radius: 5px;
+}
+.icon1 {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    width: 34px;
+    height: 10px;
+    margin-bottom: -35px;
+    margin-top: -30px;
+    margin-left: 110px;
+    cursor: pointer;
+    transform: rotate(90deg);
+  }
+  
+  .arrow1 {
+    position: absolute;
+    top: 1px;
+    width: 85%;
+    height: 3px;
+    background-color: #3c8cee;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+    animation: arrow 600ms linear infinite;
+  }
+  
+  .arrow1::after, .arrow1::before {
+    content: '';
+    position: absolute;
+    width: 48%;
+    height: 3px;
+    right: -3px;
+    background-color: #3c8cee;
+  }
+  
+  .arrow1::after {
+    top: -4px;
+    transform: rotate(45deg);
+  }
+  
+  .arrow1::before {
+    top: 4px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+    transform: rotate(-45deg);
+  }
+  @keyframes arrow1 {
+      0% {
+        top: 0;
+      }
+      50% {
+        top: 5px;
+      }
+      100% {
+        top: 0;
+      }
+    }
 .calendar-container {
     width: calc(33.33% - 20px);
     float: left;
     margin-right: 0px;
-    margin-top: -35px;
+    margin-top: -55px;
     margin-bottom: -35px;
 }
 .disabled {
@@ -236,15 +333,64 @@ select {
     pointer-events: none; /* Disable pointer events to prevent interaction */
 }
 .custom-calendar {
-    width: 100%;
-    overflow: hidden; /* Ensure proper layout */
+    width: 70%;
+    overflow: hidden;
+    background-color: #ffffff; /* Full white color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 2px 24px rgba(0, 0, 0, 0.1); /* Border shadow */
+}
+
+.custom-calendar .react-datepicker-wrapper,
+.custom-calendar .react-datepicker {
+    background-color: transparent; /* Set transparent background for datepicker */
+    border: none; /* Remove border for datepicker */
+}
+
+.custom-calendar .react-datepicker__header {
+    background-color: #a5caf7; /* White background for datepicker header */
+    border-bottom: 1px solid #e0e0e0; /* Bottom border for datepicker header */
+}
+
+.custom-calendar .react-datepicker__day-names,
+.custom-calendar .react-datepicker__week {
+    background-color: #ffffff; /* White background for day names and weeks */
+}
+
+.custom-calendar .react-datepicker__day {
+    color: #333333; /* Day text color */
+}
+
+.custom-calendar .react-datepicker__day:hover {
+    background-color: #f0f0f0; /* Hover background color for days */
+}
+.custom-calendar .react-datepicker__day--disabled {
+    color: #cccccc; /* Disabled date color */
+    pointer-events: none; /* Disable pointer events for disabled dates */
+}
+
+.custom-calendar .react-datepicker__day--disabled:hover {
+    background-color: transparent; /* Remove hover background color for disabled dates */
+}
+
+.custom-calendar .react-datepicker__day--enabled:hover {
+    background-color: #f0f0f0; /* Hover background color for enabled dates */
+}
+.calendar-container p{
+    margin-top: -20px;
+    width: 80px;
+    height: 19px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: rgb(251, 251, 59);
+    border-radius: 5px;
+
 }
 
 .modal-content {
     background:#ffffff;
-    border: 5px solid #d64242;
-    width: 550px; /* Adjust width as needed */
-    height: 450px; /* Adjust height as needed */
+    border: 5px solid #c82121;
+    width: 650px; /* Adjust width as needed */
+    height: 550px; /* Adjust height as needed */
     border-radius: 10px;
     color: rgb(5, 3, 3);
     text-align: center;
@@ -252,7 +398,7 @@ select {
     flex-direction: column;
     justify-content: space-between;
     margin-top: -155px;
-    margin-left: -250px;
+    margin-left: -350px;
     padding: 20px;
     position: relative;
     display: flex;
@@ -331,7 +477,7 @@ select {
     font-weight: 400;
     color: black;
     border: none;
-    border-radius: 5px;
+    border-radius: 28px;
     padding: 8px 16px; /* Adjust padding as needed */
     cursor: pointer;
 }
@@ -347,11 +493,11 @@ select {
     justify-content:space-around;
     align-items: center;
     height: 40px;
-    width: 925px;
-    background-color: #fd1490 ;
-    color: white;
+    width: 1000px;
+    background-color: rgb(251, 251, 59) ;
+    color: black;
     font-size: medium;
-    font-weight: 600;
+    font-weight: 800;
     border-radius: 5px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -365,7 +511,6 @@ select {
 
 .upload {
     padding: 2px;
-    margin-top: 20px;
     /* Space between price info and upload content */
     display: flex;
     flex-direction: column;
@@ -378,8 +523,8 @@ select {
     color: white;
     font-weight: 600;
     border-radius: 5px;
-    margin-top: 40px;
-    margin-left: 10px;
+    margin-top: 60px;
+    margin-left: 5px;
     width: 275px;
 }
 
@@ -417,7 +562,7 @@ label input {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
-    width: 90%;
+    width: 95%;
     /* Adjust width as needed */
     background-color:#3c8cee ;
     overflow-x: auto;
@@ -463,12 +608,12 @@ label input {
     justify-content: space-between;
     /* Align items horizontally */
     background-color: rgb(251, 251, 59);
-    color: rgb(92, 88, 88);
-    font-weight: 600;
+    color: rgb(0, 0, 0);
+    font-weight: 800;
     padding: 5px;
-    height: 20px;
+    height: 30px;
     border-radius: 5px;
-    width: 80%;
+    width: 90%;
     margin-top: 10px;
     margin-bottom: -15px;
     margin-left: 0px;
@@ -517,9 +662,9 @@ label input {
 }
 
 .coupon-code-container input {
-    border: 3px solid #fd1490; /* Black border for the input field */
-    height: 20px; /* Decrease the height of the input field */
-    padding: 5px; /* Add padding for spacing inside the input field */
+    border: 1px solid #000000; /* Black border for the input field */
+    height: 35px; /* Decrease the height of the input field */
+    padding: 6px; /* Add padding for spacing inside the input field */
 }
 
 .coupon-code-container button {

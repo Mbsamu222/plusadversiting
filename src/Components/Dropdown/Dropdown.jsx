@@ -20,31 +20,73 @@ const Dropdown = () => {
     const publicationOptions = [
         { value: 'THE HINDU', label: 'THE HINDU' },
         { value: 'DAILY THANTHI', label: 'DAILY THANTHI' },
-        { value: 'INDIAN EXPRESS', label: 'INDIAN EXPRESS' },
+        { value: 'TIMES OF INDIA', label: 'TIMES OF INDIA' },
+        
     ];
 
     const categoryOptions = [
         { value: 'Matrimonial', label: 'Matrimonial' },
-        { value: 'Educational', label: 'Educational' },
-        { value: 'Hotel Management', label: 'Hotel Management' },
+        { value: 'Real Estate', label: 'Real Estate' },
+        { value: 'Rental', label: 'Rental' },
+        { value: 'Situation Req', label: 'Situation Req' },
+        { value: 'Auto/Gen/ Rental/ Finance', label: 'Auto/Gen/ Rental/ Finance' },
+        { value: 'Business Off/Edu/Tender', label: 'Business Off/Edu/Tender ' },
+        { value: 'Marriage Bureau', label: 'Marriage Bureau' },
+        { value: 'Personal / Xpressions', label: 'Personal / Xpressions' },
+        { value: 'Situation Vacant', label: 'Situation Vacant' },
+        { value: 'Public / Auction Notice', label: 'Public / Auction Notice' },
+        { value: 'Industrial Needs spl focus*', label: 'Industrial Needs  spl focus*' },
+        { value: 'General Mart', label: ' General Mart' },
+        { value: 'Automotive-4 W', label: 'Automotive-4 W' },
+        { value: 'Auto -2Wheeler', label: 'Auto -2Wheeler' },
+        { value: 'Education', label: 'Education' },
+        { value: 'Tenders', label: 'Tenders' },
+
     ];
 
     const getEditionOptions = () => {
-        if (selectedPublication === 'THE HINDU' && selectedCategory === 'Matrimonial') {
-
-            return [
-                { value: 'Chennai Edition', label: 'Chennai Edition', disabled: true },
-                { value: 'All Edition', label: 'All Edition', disabled: false },
-                { value: 'Other Edition', label: 'Other Edition', disabled: true },
-            ];
-        } else {
-            return [
-                { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
-                { value: 'All Edition', label: 'All Edition', disabled: false },
-                { value: 'Other Edition', label: 'Other Edition', disabled: false },
-            ];
+        switch (selectedCategory) {
+            case 'Matrimonial':
+                return [
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: true },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: true },
+                    { value: 'TN Edition', label: 'TN Edition', disabled: true },
+                ];
+            case 'Real Estate':
+            case 'Rental':
+            case 'Situation Req':
+            case 'Business Off/Edu/Tender':
+            case 'Personal / Xpressions':
+            case 'Situation Vacant':
+            case 'Public / Auction Notice':
+            case 'Industrial Needs spl focus*':
+            case 'General Mart':
+            case 'Automotive-4 W':
+            case 'Auto -2Wheeler':
+            case 'Education':
+            case 'Tenders':
+                return [
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: false },
+                ];
+            case 'Marriage Bureau':
+            case 'Auto/Gen/ Rental/ Finance':
+                return [
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                ];
+            default:
+                return [
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: false },
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                ];
         }
     };
+    
 
     const handleSelectPublication = (e) => {
         setSelectedPublication(e.target.value);
@@ -65,9 +107,9 @@ const Dropdown = () => {
 
     const handleSelectEdition = (e) => {
         setSelectedEdition(e.target.value);
-        setShowImagePopup1(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition');
-        setShowImagePopup2(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition');
-        setShowImagePopup3(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition');
+        setShowImagePopup1(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition'|| e.target.value === 'TN Edition');
+        setShowImagePopup2(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition'|| e.target.value === 'TN Edition');
+        setShowImagePopup3(e.target.value === 'Chennai Edition' || e.target.value === 'All Edition' || e.target.value === 'Other Edition'|| e.target.value === 'TN Edition');
     };
 
     const handleImageTypeChange = (e) => {

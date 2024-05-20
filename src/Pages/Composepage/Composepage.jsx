@@ -7,9 +7,22 @@ import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import { Link } from 'react-router-dom';
 import the_hindu_logo from '../Assests/the_hindu_logo.jpg'
 import modal_logo from '../Assests/modal_logo.png'
+import axios from 'axios';
 
 
+const totalPrice = 100;
 
+const handlePhonePePayment = async () => {
+    try {
+        const response = await axios.post('http://localhost:4001/api/payment', { amount: totalPrice });
+        console.log(response.data);
+        if (response.data.success === true) {
+            window.location.href = response.data.data.instrumentResponse.redirectInfo.url;
+        }
+    } catch (error) {
+        console.error('Error initiating PhonePe payment:', error);
+    }
+};
 
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -18,7 +31,8 @@ const CustomCalendar = () => {
 
     // Function to check if a date is a Sunday
     const isSunday = (date) => {
-        return date.getDay() === 0;
+        const day = date.getDay();
+        return day === 0; // 0 represents Sunday
     };
 
     // Custom filter for disabling days that are not Sundays
@@ -55,11 +69,23 @@ const CustomCalendar = () => {
     };
 
     const handleSelectOption = (option) => {
-        // Handle the selection of one Sunday date and the next 3 Sundays
-        setSelectedDate(option);
         setShowPopup(false);
-        // Optionally, you can perform additional logic based on the selected option
+        console.log('Selected option:', option);
+
+        // Clear previously selected dates
+        setSelectedDate(null);
+        setSelectedSundays([]);
+
+        if (option instanceof Date) {
+            setSelectedDate(option);
+        }
+
+        if (Array.isArray(option)) {
+            setSelectedSundays(option);
+        }
     };
+
+
 
     return (
         <div className="custom-calendar">
@@ -73,6 +99,7 @@ const CustomCalendar = () => {
                 dateFormat="dd/MM/yyyy"
                 customInput={<CustomInput />}
                 inline
+                shouldDisabledDay={isSunday}
             />
             <Popup
                 trigger={<div className="popup-trigger"></div>}
@@ -90,7 +117,7 @@ const CustomCalendar = () => {
                             <li>{formatDate(selectedDate)}</li>
                         )}
                         <div className='buttons-container1'>
-                            <button> Select 1 Sunday</button>
+                            <button onClick={() => handleSelectOption(selectedDate)}> Select 1 Sunday</button>
                         </div>
                     </ul>
                     <ul>
@@ -100,9 +127,9 @@ const CustomCalendar = () => {
                                     {formatDate(sunday)} {/* Format date here */}
                                 </li>
                             ))}
-                            <div className='buttons-container2'>
-                                <button> Select 4 Sundays</button>
-                            </div>
+                        <div className='buttons-container2'>
+                            <button onClick={() => handleSelectOption(selectedSundays)}> Select 4 Sundays</button>
+                        </div>
                     </ul>
                 </div>
             </Popup>
@@ -159,6 +186,8 @@ const ComposePage = () => {
     const [paymentOption, setPaymentOption] = useState('');
     const [couponCode, setCouponCode] = useState('');
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
+    const [selectedDate] = useState(null);
+    const [selectedSundays] = useState([]);
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
         { value: '#ccffff', label: 'Light Blue' },
@@ -211,78 +240,245 @@ const ComposePage = () => {
 
     const categoryOptions = [
         { value: 'Matrimonial', label: 'Matrimonial' },
-        { value: 'Educational', label: 'Educational' },
-        { value: 'Hotel Management', label: 'Hotel Management' },
+        { value: 'Real Estate', label: 'Real Estate' },
+        { value: 'Rental', label: 'Rental' },
+        { value: 'Situation Req', label: 'Situation Req' },
+        { value: 'Auto/Gen/ Rental/ Finance', label: 'Auto/Gen/ Rental/ Finance' },
+        { value: 'Business Off/Edu/Tender', label: 'Business Off/Edu/Tender ' },
+        { value: 'Marriage Bureau', label: 'Marriage Bureau' },
+        { value: 'Personal / Xpressions', label: 'Personal / Xpressions' },
+        { value: 'Situation Vacant', label: 'Situation Vacant' },
+        { value: 'Public / Auction Notice', label: 'Public / Auction Notice' },
+        { value: 'Industrial Needs spl focus*', label: 'Industrial Needs  spl focus*' },
+        { value: 'General Mart', label: ' General Mart' },
+        { value: 'Automotive-4 W', label: 'Automotive-4 W' },
+        { value: 'Auto -2Wheeler', label: 'Auto -2Wheeler' },
+        { value: 'Education', label: 'Education' },
+        { value: 'Tenders', label: 'Tenders' },
+
     ];
     const getEditionOptions = () => {
-        if (selectedPublication === 'THE HINDU' && selectedCategory === 'Matrimonial') {
-            return [
-                { value: 'Chennai Edition', label: 'Chennai Edition', disabled: true },
-                { value: 'All Edition', label: 'All Edition', disabled: false },
-                { value: 'Other Edition', label: 'Other Edition', disabled: true },
-            ];
-        } else {
-            return [
-                { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
-                { value: 'All Edition', label: 'All Edition', disabled: false },
-                { value: 'Other Edition', label: 'Other Edition', disabled: false },
-            ];
+        switch (selectedCategory) {
+            case 'Matrimonial':
+                return [
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: true },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: true },
+                    { value: 'TN Edition', label: 'TN Edition', disabled: true },
+                ];
+            case 'Real Estate':
+            case 'Rental':
+            case 'Situation Req':
+            case 'Business Off/Edu/Tender':
+            case 'Personal / Xpressions':
+            case 'Situation Vacant':
+            case 'Public / Auction Notice':
+            case 'Industrial Needs spl focus*':
+            case 'General Mart':
+            case 'Automotive-4 W':
+            case 'Auto -2Wheeler':
+            case 'Education':
+            case 'Tenders':
+                return [
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: false },
+                ];
+            case 'Marriage Bureau':
+            case 'Auto/Gen/ Rental/ Finance':
+                return [
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                ];
+            default:
+                return [
+                    { value: 'Chennai Edition', label: 'Chennai Edition', disabled: false },
+                    { value: 'All Edition', label: 'All Edition', disabled: false },
+                    { value: 'Other Edition', label: 'Other Edition', disabled: false },
+                    { value: 'TN Edition', label: 'TN Edition', disabled: false },
+                ];
         }
     };
 
-    const subCategory1Options = [
-        { value: 'Wanted Bride', label: 'Wanted Bride' },
-        { value: 'Wanted Grooms', label: 'Wanted Grooms' },
-    ];
+    const subCategory1Options = useMemo(() => {
+        switch (selectedCategory) {
+            case 'Matrimonial':
+                return [
+                    { value: 'Wanted Bride', label: 'Wanted Bride' },
+                    { value: 'Wanted Grooms', label: 'Wanted Grooms' },
+                ];
+            case 'Real Estate':
+                return [
+                    { value: 'Buying', label: 'Buying' },
+                    { value: 'Selling', label: 'Selling' },
+                ];
+            case 'Rental':
+                return [
+                    { value: 'Rental', label: 'Rental' },
+                    { value: 'Rental Residential', label: 'Rental Residential' },
+                ];
+            // Add cases for other categories as needed
+            default:
+                return [];
+        }
+    }, [selectedCategory]);
 
-    const subCategory2Options = [
-        { value: 'Tamil', label: 'Tamil' },
-        { value: 'Telugu', label: 'Telugu' },
-        { value: 'Malayalam', label: 'Malayalam' },
-        { value: 'Kannada', label: 'Kannada' },
-        { value: 'Hindi', label: 'Hindi' },
-        { value: 'English', label: 'English' },
-        { value: 'Assamese', label: 'Assamese' },
-        { value: 'Awadhi', label: 'Awadhi' },
-        { value: 'Bengali', label: 'Bengali' },
-        { value: 'Bhojpuri', label: 'Bhojpuri' },
-        { value: 'Bihari', label: 'Bihari' },
-        { value: 'Chhattisgarthi', label: 'Chhattisgarth' },
-        { value: 'Gujarati', label: 'Gujarati' },
-        { value: 'Haryanvi', label: 'Haryanvi' },
-        { value: 'Kashmiri', label: 'Kashmiri' },
-        { value: 'Konkani', label: 'Konkani' },
-        { value: 'Manipuri', label: 'Manipuri' },
-        { value: 'Marathi', label: 'Marathi' },
-        { value: 'Marwari', label: 'Marwari' },
-        { value: 'Nepali', label: 'Nepali' },
-        { value: 'Parsi', label: 'Parsi' },
-        { value: 'Punjabi', label: 'Punjabi' },
-        { value: 'Saurastra', label: 'Saurastra' },
-        { value: 'Sindhi', label: 'Sindhi' },
-        { value: 'Tulu', label: 'Tulu' },
-        { value: 'Urdu', label: 'Urdu' },
-        { value: 'Advocate', label: 'Advocate' },
-        { value: 'Business', label: 'Business' },
-        { value: 'Defence', label: 'Defence' },
-        { value: 'Doctor', label: 'Doctor' },
-        { value: 'Engineer', label: 'Engineer' },
-        { value: 'Finance/Bank', label: 'Finance/Bank' },
-        { value: 'Govt/Quasi G', label: 'Govt/Quasi G' },
-        { value: 'IAS/Allied Ser', label: 'IAS/Allied Ser' },
-        { value: 'Computer/Info', label: 'Computer/Info' },
-        { value: 'MBA/CA/ICWA', label: 'MBA/CA/ICWA' },
-        { value: 'NRI', label: 'NRI' },
-        { value: 'Divorces', label: 'Divorces' },
-        { value: 'Physically Challenged', label: 'Physically Challenged' },
-        { value: 'Cosmopolitan', label: 'Cosmopolitan' },
-    ];
+    const subCategory2Options = useMemo(() => {
+        switch (selectedSubCategory1) {
+            case 'Wanted Bride' :
+                return [
+                    { value: 'Tamil', label: 'Tamil' },
+                    { value: 'Telugu', label: 'Telugu' },
+                    { value: 'Malayalam', label: 'Malayalam' },
+                    { value: 'Kannada', label: 'Kannada' },
+                    { value: 'Hindi', label: 'Hindi' },
+                    { value: 'English', label: 'English' },
+                    { value: 'Assamese', label: 'Assamese' },
+                    { value: 'Awadhi', label: 'Awadhi' },
+                    { value: 'Bengali', label: 'Bengali' },
+                    { value: 'Bhojpuri', label: 'Bhojpuri' },
+                    { value: 'Bihari', label: 'Bihari' },
+                    { value: 'Chhattisgarthi', label: 'Chhattisgarth' },
+                    { value: 'Gujarati', label: 'Gujarati' },
+                    { value: 'Haryanvi', label: 'Haryanvi' },
+                    { value: 'Kashmiri', label: 'Kashmiri' },
+                    { value: 'Konkani', label: 'Konkani' },
+                    { value: 'Manipuri', label: 'Manipuri' },
+                    { value: 'Marathi', label: 'Marathi' },
+                    { value: 'Marwari', label: 'Marwari' },
+                    { value: 'Nepali', label: 'Nepali' },
+                    { value: 'Parsi', label: 'Parsi' },
+                    { value: 'Punjabi', label: 'Punjabi' },
+                    { value: 'Saurastra', label: 'Saurastra' },
+                    { value: 'Sindhi', label: 'Sindhi' },
+                    { value: 'Tulu', label: 'Tulu' },
+                    { value: 'Urdu', label: 'Urdu' },
+                    { value: 'Advocate', label: 'Advocate' },
+                    { value: 'Business', label: 'Business' },
+                    { value: 'Defence', label: 'Defence' },
+                    { value: 'Doctor', label: 'Doctor' },
+                    { value: 'Engineer', label: 'Engineer' },
+                    { value: 'Finance/Bank', label: 'Finance/Bank' },
+                    { value: 'Govt/Quasi G', label: 'Govt/Quasi G' },
+                    { value: 'IAS/Allied Ser', label: 'IAS/Allied Ser' },
+                    { value: 'Computer/Info', label: 'Computer/Info' },
+                    { value: 'MBA/CA/ICWA', label: 'MBA/CA/ICWA' },
+                    { value: 'NRI', label: 'NRI' },
+                    { value: 'Divorces', label: 'Divorces' },
+                    { value: 'Physically Challenged', label: 'Physically Challenged' },
+                    { value: 'Cosmopolitan', label: 'Cosmopolitan' },
+                ];
+                case 'Wanted Grooms' :
+                return [
+                    { value: 'Tamil', label: 'Tamil' },
+                    { value: 'Telugu', label: 'Telugu' },
+                    { value: 'Malayalam', label: 'Malayalam' },
+                    { value: 'Kannada', label: 'Kannada' },
+                    { value: 'Hindi', label: 'Hindi' },
+                    { value: 'English', label: 'English' },
+                    { value: 'Assamese', label: 'Assamese' },
+                    { value: 'Awadhi', label: 'Awadhi' },
+                    { value: 'Bengali', label: 'Bengali' },
+                    { value: 'Bhojpuri', label: 'Bhojpuri' },
+                    { value: 'Bihari', label: 'Bihari' },
+                    { value: 'Chhattisgarthi', label: 'Chhattisgarth' },
+                    { value: 'Gujarati', label: 'Gujarati' },
+                    { value: 'Haryanvi', label: 'Haryanvi' },
+                    { value: 'Kashmiri', label: 'Kashmiri' },
+                    { value: 'Konkani', label: 'Konkani' },
+                    { value: 'Manipuri', label: 'Manipuri' },
+                    { value: 'Marathi', label: 'Marathi' },
+                    { value: 'Marwari', label: 'Marwari' },
+                    { value: 'Nepali', label: 'Nepali' },
+                    { value: 'Parsi', label: 'Parsi' },
+                    { value: 'Punjabi', label: 'Punjabi' },
+                    { value: 'Saurastra', label: 'Saurastra' },
+                    { value: 'Sindhi', label: 'Sindhi' },
+                    { value: 'Tulu', label: 'Tulu' },
+                    { value: 'Urdu', label: 'Urdu' },
+                    { value: 'Advocate', label: 'Advocate' },
+                    { value: 'Business', label: 'Business' },
+                    { value: 'Defence', label: 'Defence' },
+                    { value: 'Doctor', label: 'Doctor' },
+                    { value: 'Engineer', label: 'Engineer' },
+                    { value: 'Finance/Bank', label: 'Finance/Bank' },
+                    { value: 'Govt/Quasi G', label: 'Govt/Quasi G' },
+                    { value: 'IAS/Allied Ser', label: 'IAS/Allied Ser' },
+                    { value: 'Computer/Info', label: 'Computer/Info' },
+                    { value: 'MBA/CA/ICWA', label: 'MBA/CA/ICWA' },
+                    { value: 'NRI', label: 'NRI' },
+                    { value: 'Divorces', label: 'Divorces' },
+                    { value: 'Physically Challenged', label: 'Physically Challenged' },
+                    { value: 'Cosmopolitan', label: 'Cosmopolitan' },
+                ];
+            case 'Buying':
+                return [
+                    { value: 'Commercial', label: 'CommercialL' },
+                    { value: 'Commercial Building', label: 'Commercial Building' },
+                    { value: 'Commercial Land', label: 'Commercial Land' },
+                    { value: 'Factories Sites', label: 'Factories Sites' },
+                    { value: 'Farmhouse/ Land/ Resorts', label: 'Farmhouse/ Land/ Resorts' },
+                    { value: 'General', label: 'General' },
+                    { value: 'Residential', label: 'Residential' },
+                    { value: 'Residential Flat', label: 'Residential Flat' },
+                    { value: 'Residential House', label: 'Residential House' },
+                    { value: 'Residential Land', label: 'Residential Land' },
+                    { value: 'TimeShare', label: 'TimeShare' },
+                ];
+            case 'Selling':
+                return [
+                    { value: 'Commercial', label: 'Commercial' },
+                    { value: 'Commercial Building', label: 'Commercial Building' },
+                    { value: 'Commercial Land', label: 'Commercial Land' },
+                    { value: 'Factories Sites', label: 'Factories Sites' },
+                    { value: 'Farmhouse/ Land/ Resorts', label: 'Farmhouse/ Land/ Resorts' },
+                    { value: 'General', label: 'General' },
+                    { value: 'Residential', label: 'Residential' },
+                    { value: 'Residential Flatnew', label: 'Residential Flatnew' },
+                    { value: 'Residential Flatothers', label: 'Residential Flatothers' },
+                    { value: 'Residential Flatresale', label: 'Residential Flatresale' },
+                    { value: 'Residential House', label: 'Residential House' },
+                    { value: 'Residential Land', label: 'Residential Land' },
+                    { value: 'TimeShare', label: 'TimeShare' },
+                    // Add more options as needed
+                ];
+            case 'Rental':
+                return [
+                    { value: 'Accommodation Wanted ', label: 'Accommodation Wanted ' },
+                    { value: 'Accommodation Wanted Commercial ', label: 'Accommodation Wanted Commercial ' },
+                    { value: 'Accommodation Wanted Residential ', label: 'Accommodation Wanted Residential ' },
+                    { value: 'Bank Notice ', label: 'Bank Notice ' },
+                    { value: 'Change Of Address Services ', label: 'Change Of Address Services ' },
+                    { value: 'Commercial Rental Fabrication Works ', label: 'Commercial Rental Fabrication Works ' },
+                    { value: 'Factories Sites ', label: 'Factories Sites ' },
+                    { value: 'Farm House/ Land/ Resorts ', label: 'Farm House/ Land/ Resorts ' },
+                    { value: 'General ', label: 'General ' },
+                    { value: 'Guest House ', label: 'Guest House ' },
+                    { value: 'Hostel ', label: 'Hostel ' },
+                    { value: 'Paying Guest Accommodation ', label: 'Paying Guest Accommodation ' },
+                    { value: 'Service Apartments', label: 'Service Apartments' },
+                    { value: 'Timeshare ', label: 'Timeshare ' },
+                ];
+            default:
+                return [];
+                case 'Rental Residential':
+                    return [
+                        { value: 'Abiramapuram ', label: 'Abiramapuram ' },{ value: 'Adambakkam ', label: 'Adambakkam ' },{ value: 'Adyar', label: 'Adyar' },{ value: 'Airport Road ', label: 'Airport Road ' },{ value: 'Alandur ', label: 'Alandur ' },{ value: 'Alwarpet ', label: 'Alwarpet ' },{ value: 'Alwarthiru Nagar', label: 'Alwarthiru Nagar' },{ value: 'Ambattur', label: 'Ambattur' },{ value: 'Aminjikarai', label: 'Aminjikarai' },{ value: 'Anakaputhur', label: 'Anakaputhur' },{ value: 'Anjanapura', label: 'Anjanapura' },{ value: 'Anna Nagar', label: 'Anna Nagar' },{ value: 'Anna Nagar East ', label: 'Anna Nagar East ' },{ value: 'Anna Nagar West', label: 'Anna Nagar West' },{ value: 'Anna Salai ', label: 'Anna Salai' },{ value: 'Arakonam', label: 'Arakonam' },{ value: 'Arumbakkam', label: 'Arumbakkam' },{ value: 'Ashok Nagar', label: 'Ashok Nagar' },{ value: 'Avadi', label: 'Avadi' },{ value: 'Ayanavaram', label: 'Ayanavaram' },{ value: 'Banashankari', label: 'Banashankari' },{ value: 'Banaswadi', label: 'Banaswadi' },{ value: 'Bannerghatta Road', label: 'Bannerghatta Road' },{ value: 'Basavanagudi', label: 'Basavanagudi' },{ value: 'Besant Nagar ', label: 'Besant Nagar ' },{ value: 'Broadway', label: 'Broadway' },{ value: 'Brookfields', label: 'Brookfields' },{ value: 'Btm Layout', label: 'Btm Layout' },{ value: 'C. V. Raman Nagar', label: 'C. V. Raman Nagar' },{ value: 'Chamarajapet', label: 'Chamarajapet' },{ value: 'Chengalpet', label: 'Chengalpet' },{ value: 'Chetpet', label: 'Chetpet' },{ value: 'Chintadripet', label: 'Chintadripet' },{ value: 'Chitlapakkam', label: 'Chitlapakkam' },{ value: 'Choolai', label: 'Choolai' },{ value: 'Choolaimedu', label: 'Choolaimedu' },{ value: 'Chromepet', label: 'Chromepet' },{ value: 'Cinc Road', label: 'Cinc Road' },{ value: 'Cooke Town', label: 'Cooke Town' },{ value: 'Defence Colony', label: 'Defence Colony' },{ value: 'Devanahalli', label: 'Devanahalli' },{ value: 'Dollars Colony', label: 'Dollars Colony' },{ value: 'East Coast Road', label: 'East Coast Road' },{ value: 'Egmore', label: 'Egmore' },{ value: 'Ekkaduthangal', label: 'Ekkaduthangal' },{ value: 'Electronics City', label: 'Electronics City' },{ value: 'Ennore', label: 'Ennore' },{ value: 'Fort St George', label: 'Fort St George' },{ value: 'Frazer Town', label: 'Frazer Town' },{ value: 'Ganganagar', label: 'Ganganagar' },{ value: 'Gopalapuram', label: 'Gopalapuram' },{ value: 'Gowrivakkam', label: 'Gowrivakkam' },{ value: 'Greams Road', label: 'Greams Road' },{ value: 'Guduvancheri', label: 'Guduvancheri' },{ value: 'Guindy', label: 'Guindy' },{ value: 'Guindy Industrial Estate', label: 'Guindy Industrial Estate' },{ value: 'Gummidipoondi', label: 'Gummidipoondi' },{ value: 'Halasuru', label: 'Halasuru' },{ value: 'Hbr Layout', label: 'Hbr Layout' },{ value: 'Hebbal', label: 'Hebbal' },{ value: 'Hosur Road', label: 'Hosur Road' },{ value: 'Hrbr Layout', label: 'Hrbr Layout' },{ value: 'Hsr Layout', label: 'Hsr Layout' },{ value: 'I C F Colony ', label: 'I C F Colony ' },{ value: 'I I T ', label: 'I I T ' },{ value: 'Indira Nagar', label: 'Indira Nagar' },{ value: 'Injambakkam', label: 'Injambakkam' },{ value: 'International Airport', label: 'International Airport' },{ value: 'Itpl', label: 'Itpl' },{ value: 'Iyyappanthangal', label: 'Iyyappanthangal' },{ value: 'J P Nagar', label: 'J P Nagar' },{ value: 'Jafferkhanpet', label: 'Jafferkhanpet' },{ value: 'Jakkur', label: 'Jakkur' },{ value: 'Jalahalli', label: 'Jalahalli' },{ value: 'Jawahar Nagar ', label: 'Jawahar Nagar ' },{ value: 'Jayanagar', label: 'Jayanagar' },{ value: 'Jc Road', label: 'Jc Road' },{ value: 'Jeevanbhima Nagar', label: 'Jeevanbhima Nagar' },{ value: 'K K Nagar', label: 'K K Nagar' },{ value: 'K R Puram', label: 'K R Puram' },{ value: 'Kaggadaspura', label: 'Kaggadaspura' },{ value: 'Kalasipalayam', label: 'Kalasipalayam' },{ value: 'Kalyananagar', label: 'Kalyananagar' },{ value: 'Kanakapura Road', label: 'Kanakapura Road' },{ value: 'Kanchipuram', label: 'Kanchipuram' },{ value: 'Kasturi Nagar', label: 'Kasturi Nagar' },{ value: 'Kavarapettai', label: 'Kavarapettai' },{ value: 'Kelambakkam', label: 'Kelambakkam' },{ value: 'Kellys', label: 'Kellys' },{ value: 'Kellys', label: 'Kellys' },{ value: 'Kilkattalai', label: 'Kilkattalai' },{ value: 'Kilpauk', label: 'Kilpauk' },{ value: 'Kodambakkam', label: 'Kodambakkam' },{ value: 'Kodungaiyur', label: 'Kodungaiyur' },{ value: 'Kolathur', label: 'Kolathur' },{ value: 'Koramangala', label: 'Koramangala' },{ value: 'Korattur', label: 'Korattur' },{ value: 'Kosappur', label: 'Kosappur' },{ value: 'Kottivakkam', label: 'Kottivakkam' },{ value: 'Kotturpuram', label: 'Kotturpuram' },{ value: 'Kovilambakkam', label: 'Kovilambakkam' },{ value: 'Koyambedu', label: 'Koyambedu' },{ value: 'Kumara Park ', label: 'Kumara Park ' },{ value: 'Kumaraswamy Layout', label: 'Kumaraswamy Layout' },{ value: 'Kundrathur', label: 'Kundrathur' },{ value: 'Lalbagh Road', label: 'Lalbagh Road' },{ value: 'Langford Town', label: 'Langford Town' },{ value: 'M G Road', label: 'M G Road' },{ value: 'Madhavaram', label: 'Madhavaram' },{ value: 'Madipakkam', label: 'Madipakkam' },{ value: 'Maduravoyal', label: 'Maduravoyal' },{ value: 'Magadi Road', label: 'Magadi Road' },{ value: 'Mahabalipuram', label: 'Mahabalipuram' },{ value: 'Mahadevapura', label: 'Mahadevapura' },{ value: 'Mahalaxmipuram', label: 'Mahalaxmipuram' },{ value: 'Malleshwaram', label: 'Malleshwaram' },{ value: 'Manali', label: 'Manali' },{ value: 'Manapakkam', label: 'Manapakkam' },{ value: 'Mandaveli', label: 'Mandaveli' },{ value: 'Mangadu', label: 'Mangadu' },{ value: 'Maraimalai Nagar', label: 'Maraimalai Nagar' },{ value: 'Marathahalli', label: 'Marathahalli' },{ value: 'Mathikere', label: 'Mathikere' },{ value: 'Medavakkam', label: 'Medavakkam' },{ value: 'Meenambakkam', label: 'Meenambakkam' },{ value: 'Minjur', label: 'Minjur' },{ value: 'Mogappair', label: 'Mogappair' },{ value: 'Mogappair East', label: 'Mogappair East' },{ value: 'Mogappair West', label: 'Mogappair West' },{ value: 'Moolakadai', label: 'Moolakadai' },{ value: 'Mugalivakkam', label: 'Mugalivakkam' },{ value: 'Multiple Locations', label: 'Multiple Locations' },{ value: 'Mylapore', label: 'Mylapore' },{ value: 'Nagarabhavi', label: 'Nagarabhavi' },{ value: 'Nandambakkam', label: 'Nandambakkam' },{ value: 'Nandanam', label: 'Nandanam' },{ value: 'Nanganallur', label: 'Nanganallur' },{ value: 'Navalur', label: 'Navalur' },{ value: 'Neelankarai', label: 'Neelankarai' },{ value: 'Nesapakkam', label: 'Nesapakkam' },{ value: 'New Bel Road', label: 'New Bel Road' },{ value: 'Nolambur', label: 'Nolambur' },{ value: 'Noombal', label: 'Noombal' },{ value: 'Nungambakkam', label: 'Nungambakkam' },{ value: 'Omr', label: 'Omr' },{ value: 'Oragadam', label: 'Oragadam' },{ value: 'Others', label: 'Others' },{ value: 'Outer Ring Road', label: 'Outer Ring Road' },{ value: 'Padappai', label: 'Padappai' },{ value: 'Padi', label: 'Padi' },{ value: 'Padmanabha Nagar', label: 'Padmanabha Nagar' },{ value: 'Padur', label: 'Padur' },{ value: 'Palavakkam', label: 'Palavakkam' },{ value: 'Pallavaram', label: 'Pallavaram' },{ value: 'Pallikaranai', label: 'Pallikaranai' },{ value: 'Pammal', label: 'Pammal' },{ value: 'Park Town', label: 'Park Town' },{ value: 'Parrys', label: 'Parrys' },{ value: 'Pattabiram', label: 'Pattabiram' },{ value: 'Pazhavanthangal', label: 'Pazhavanthangal' },{ value: 'Peenya', label: 'Peenya' },{ value: 'Perambur', label: 'Perambur' },{ value: 'Periamet', label: 'Periamet' },{ value: 'Periyar Nagar', label: 'Periyar Nagar' },{ value: 'Perungalathur', label: 'Perungalathur' },{ value: 'Perungudi', label: 'Perungudi' },{ value: 'Ponneri', label: 'Ponneri' },{ value: 'Poonamallee', label: 'Poonamallee' },{ value: 'Porur', label: 'Porur' },{ value: 'Pozhichalur', label: 'Pozhichalur' },{ value: 'Pulicat', label: 'Pulicat' },{ value: 'Purasawalkam', label: 'Purasawalkam' },{ value: 'Puzhal', label: 'Puzhal' },{ value: 'Puzhuthivakkam', label: 'Puzhuthivakkam' },{ value: 'R A Puram', label: 'R A Puram' },{ value: 'R M V Extension ', label: 'R M V Extension ' },{ value: 'Rabindranath Tagore Nagar', label: 'Rabindranath Tagore Nagar' },{ value: 'Raj Bhavan', label: 'Raj Bhavan' },{ value: 'Rajajinagar', label: 'Rajajinagar' },{ value: 'Rajarajeshwari Nagar', label: 'Rajarajeshwari Nagar' },{ value: 'Ramavaram', label: 'Ramavaram' },{ value: 'Red Hills', label: 'Red Hills' },{ value: 'Richmond Town', label: 'Richmond Town' },{ value: 'Royapettah', label: 'Royapettah' },{ value: 'Royapuram', label: 'Royapuram' },{ value: 'Sadashiva Nagar', label: 'Sadashiva Nagar' },{ value: 'Sahakaranagar', label: 'Sahakaranagar' },{ value: 'Saidapet', label: 'Saidapet' },{ value: 'Saligramam', label: 'Saligramam' },{ value: 'Sanjaynagar', label: 'Sanjaynagar' },{ value: 'Santhome', label: 'Santhome' },{ value: 'Sarjapur Road', label: 'Sarjapur Road' },{ value: 'Sathyamurthy Nagar', label: 'Sathyamurthy Nagar' },{ value: 'Selaiyur', label: 'Selaiyur' },{ value: 'Sembakkam', label: 'Sembakkam' },{ value: 'Sembium', label: 'Sembium' },{ value: 'Shenoy Nagar', label: 'Shenoy Nagar' },{ value: 'Sheshadripuram', label: 'Sheshadripuram' },{ value: 'Sholavaram', label: 'Sholavaram' },{ value: 'Sholinganallur', label: 'Sholinganallur' },{ value: 'Sidco Estate', label: 'Sidco Estate' },{ value: 'Singaperumal Koil', label: 'Singaperumal Koil' },{ value: 'Siruseri', label: 'Siruseri' },{ value: 'Sowcarpet', label: 'Sowcarpet' },{ value: 'Srinivasa Nagar', label: 'Srinivasa Nagar' },{ value: 'Sriperumbudur', label: 'Sriperumbudur' },{ value: 'St Thomas Mount', label: 'St Thomas Mount' },{ value: 'T Nagar', label: 'T Nagar' },{ value: 'Tambaram', label: 'Tambaram' },{ value: 'Tambaram East', label: 'Tambaram East' },{ value: 'Tambaram Sanatorium', label: 'Tambaram Sanatorium' },{ value: 'Tambaram West', label: 'Tambaram West' },{ value: 'Taramani', label: 'Taramani' },{ value: 'Teynampet', label: 'Teynampet' },{ value: 'Thippasandra', label: 'Thippasandra' },{ value: 'Thirumazhisai ', label: 'Thirumazhisai ' },{ value: 'Thirunindravur', label: 'Thirunindravur' },{ value: 'Thiruvallur', label: 'Thiruvallur' },{ value: 'Thiruvanmiyur', label: 'Thiruvanmiyur' },{ value: 'Thiruverkadu', label: 'Thiruverkadu' },{ value: 'Thuraipakkam', label: 'Thuraipakkam' },{ value: 'Tiruvottiyur ', label: 'Tiruvottiyur ' },{ value: 'Tondiarpet', label: 'Tondiarpet' },{ value: 'Triplicane', label: 'Triplicane' },{ value: 'Tvk Nagar', label: 'Tvk Nagar' },{ value: 'Ullagaram', label: 'Ullagaram' },{ value: 'Urappakkam', label: 'Urappakkam' },{ value: 'Vadapalani', label: 'Vadapalani ' },{ value: 'Valasarawalkam', label: 'Valasarawalkam' },{ value: 'Vanagaram', label: 'Vanagaram' },{ value: 'Vandalur', label: 'Vandalur' },{ value: 'Vasanthanagar', label: 'Vasanthanagar' },{ value: 'Velacheri ', label: 'Velacheri ' },{ value: 'Vellappanchavadi', label: 'Vellappanchavadi' },{ value: 'Vepery', label: 'Vepery' },{ value: 'Vidyaranyapura', label: 'Vidyaranyapura' },{ value: 'Vijayanagara', label: 'Vijayanagara' },{ value: 'Villivakkam', label: 'Villivakkam' },{ value: 'Virugambakkam ', label: 'Virugambakkam ' },{ value: 'Visweswariah Road', label: 'Visweswariah Road' },{ value: 'Vyasarpadi', label: 'Vyasarpadi' },{ value: 'Washermanpet', label: 'Washermanpet' },{ value: 'West Mambalam', label: 'West Mambalam' },{ value: 'Whitefield', label: 'Whitefield' },{ value: 'Yelahanka', label: 'Yelahanka' },{ value: 'Gerugambakkam', label: 'Gerugambakkam' },
+                    ];
+        }
+    }, [selectedSubCategory1]);
+
 
     const handleSubCategory1Change = (e) => {
         setSelectedSubCategory1(e.target.value);
         setSelectedSubCategory2('');
 
     };
+    const handleSubCategory2Change = (e) => {
+        setSelectedSubCategory2(e.target.value);
+    };
+    const shouldBlink = !(selectedSubCategory1 && selectedSubCategory2);
+
 
     const handleTextAreaChange = (e) => {
 
@@ -296,36 +492,66 @@ const ComposePage = () => {
         setTextAreaValue(updatedValue);
         setPreviewContent(updatedValue);
 
-        // Calculate the price based on the text length and additional character cost
         const characterCount = value.length;
-        let totalPrice = 0; // Set initial price to 0
+        let maxCharacterCount = 70; // Default max character count
+        let basePrice = 2180; // Default base price
+        let extraPricePer35Characters = 1955; // Default extra price per 35 characters
+
+        // Check if selectedPublication, selectedCategory, and selectedEdition match any specific criteria
+        let specialPrices = {
+            'THE HINDU': {
+                'Matrimonial': {
+                    'All Edition': { basePrice: 1575, extraPricePer35Characters: 485, maxCharacterCount: 105, extraPricePerCharacters: 35 },
+                },
+                'Real Estate': {
+                    'All Edition': { basePrice: 2825, extraPricePer35Characters: 1285 },
+                    'Chennai Edition': { basePrice: 2180, extraPricePer35Characters: 870 }
+                },
+                'Rental': {
+                    'All Edition': { basePrice: 2825, extraPricePer35Characters: 1285 },
+                    'Chennai Edition': { basePrice: 1210, extraPricePer35Characters: 515 }
+                },
+                'Situtation Req': {
+                    'All Edition': { basePrice: 2810, extraPricePer35Characters: 1230 },
+                    'Chennai Edition': { basePrice: 1260, extraPricePer35Characters: 495 }
+                },
+                'Business Off/Edu/Tender': {
+                    'All Edition': { basePrice: 3850, extraPricePer35Characters: 1670 },
+                    'Chennai Edition': { basePrice: 2310, extraPricePer35Characters: 915 }
+                },
+                'Personal / Xpressions': {
+                    'All Edition': { basePrice: 3850, extraPricePer35Characters: 1670 },
+                    'Chennai Edition': { basePrice: 2310, extraPricePer35Characters: 915 }
+                },
+            }
+        };
+
+        const selectedSpecialPrices = specialPrices[selectedPublication]?.[selectedCategory]?.[selectedEdition];
+        if (selectedSpecialPrices) {
+            maxCharacterCount = 70;
+            basePrice = selectedSpecialPrices.basePrice;
+            extraPricePer35Characters = selectedSpecialPrices.extraPricePer35Characters;
+        }
+
+        // Set the text area value
+        setTextAreaValue(value);
+
+        // Calculate the total price based on the character count and prices
+        let totalPrice = 0;
         let extraCharacters = 0;
         let extraPrice = 0;
 
-        if (characterCount > 0) { // Added condition to handle when characters are deleted
-            if (characterCount > 105) {
-                // Calculate extra characters beyond the first 105
-                const additionalCharacters = characterCount - 105;
-                extraCharacters = Math.ceil(additionalCharacters / 35); // Calculate extra characters for every 35 characters beyond 105
-                extraPrice = Math.ceil(additionalCharacters / 35) * 485;
-
-                // Calculate the extra price based on the extra characters
-                totalPrice = 1575 + extraCharacters * 485;
+        if (characterCount > 0) {
+            if (characterCount > maxCharacterCount) {
+                const additionalCharacters = characterCount - maxCharacterCount;
+                extraCharacters = Math.ceil(additionalCharacters / 35);
+                extraPrice = extraCharacters * extraPricePer35Characters;
+                totalPrice = basePrice + extraPrice;
             } else {
-                // Set base price if character count is less than or equal to 105
-                totalPrice = 1575;
+                totalPrice = basePrice;
             }
-        } else {
-            // Set initial stage when character count is zero
-            totalPrice = 0;
-            extraCharacters = 0;
-            extraPrice = 0;
         }
 
-
-        // Split the text into words and capitalize the first two letters of each word
-
-        // Set the total price, extra characters, and extra price in state
 
         setTotalPrice(totalPrice);
         setExtraCharacters(extraCharacters);
@@ -366,6 +592,27 @@ const ComposePage = () => {
         // You can implement logic to handle coupon code submission here
         alert(`Coupon Code Submitted: ${couponCode}`);
     };
+
+    const inputFields = document.querySelectorAll('.input-field select');
+
+    inputFields.forEach((inputField) => {
+        inputField.addEventListener('focus', () => {
+            inputField.classList.add('blink-border');
+        });
+
+        inputField.addEventListener('change', () => {
+            inputField.classList.remove('blink-border');
+        });
+    });
+
+
+    const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
 
     return (
         <div className='package'>
@@ -439,6 +686,10 @@ const ComposePage = () => {
                         <span>-{selectedEdition}</span>
                         <span>-{selectedSubCategory1}</span>
                         <span>-{selectedSubCategory2}</span>
+                        <span>{selectedDate ? formatDate(selectedDate) : ''}</span>
+                        {selectedSundays.length > 0 && (
+                            <span>-Sundays: {selectedSundays.map((date) => formatDate(date)).join(', ')}</span>
+                        )}
                         {isTickAdded && <span>-Tick</span>}
                         {isBoldText && <span>-Bold</span>}
                         {selectedBgColor !== '#ffffff' && <span>-BG Color</span>}
@@ -448,17 +699,18 @@ const ComposePage = () => {
                 </div>
                 <div>
                     <div className="container">
-                        <div class="icon">
-                            <div class="arrow"></div>
+                        <div className="icon">
+                            <div className="arrow"></div>
                         </div>
-                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>Select SubCategorys</h3>
-                        <div className="input-field">
+                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>
+                            Select SubCategory2
+                        </h3>
+                        <div className={`input-field ${shouldBlink && (!selectedSubCategory1 || !selectedSubCategory2) ? 'blinking' : 'default-border'}`}>
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
                                 id="selectedSubCategory1"
                                 value={selectedSubCategory1}
                                 onChange={handleSubCategory1Change}
-                                disabled={!selectedPublication || !selectedCategory || selectedCategory !== 'Matrimonial' || selectedEdition !== 'All Edition'}
                             >
                                 <option value="">Subcategory-1</option>
                                 {subCategory1Options.map((option) => (
@@ -469,13 +721,12 @@ const ComposePage = () => {
                             </select>
                         </div>
                         {selectedSubCategory1 && (
-                            <div className="input-field">
+                            <div className={`input-field ${shouldBlink && (!selectedSubCategory1 || !selectedSubCategory2) ? 'blinking' : 'default-border'}`}>
                                 <label htmlFor="selectedSubCategory2"></label>
                                 <select
                                     id="selectedSubCategory2"
                                     value={selectedSubCategory2}
-                                    onChange={(e) => setSelectedSubCategory2(e.target.value)}
-                                    disabled={!selectedSubCategory1 || !selectedPublication || !selectedCategory || selectedCategory !== 'Matrimonial' || selectedEdition !== 'All Edition'}
+                                    onChange={handleSubCategory2Change}
                                 >
                                     <option value="">-Subcategory-</option>
                                     {subCategory2Options.map((option) => (
@@ -504,6 +755,7 @@ const ComposePage = () => {
                         />
                     </div>
                     <div className={`preview-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        <p>Your Preview</p>
                         <textarea
                             id="previewTextArea"
                             rows={10}
@@ -516,10 +768,13 @@ const ComposePage = () => {
                         />
                     </div>
                     <div className={`calendar-container ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                        <div class="icon1">
+                            <div class="arrow1"></div>
+                        </div>
+                        <p>Calendar</p>
                         {/* Include CustomCalendar component here */}
                         <CustomCalendar />
                     </div>
-
                     <div className="content">
                         <label htmlFor="addTick">Add Tick</label>
                         <input
@@ -568,6 +823,8 @@ const ComposePage = () => {
                                     <th>Edition</th>
                                     <th>Subcategory 1</th>
                                     <th>Subcategory 2</th>
+                                    <th>Date</th>
+                                    <th>Dates</th>
                                     <th>Extra Lines</th>
                                     {/* Conditionally render additional labels based on checkbox states */}
                                     {isTickAdded && <th>Add Tick</th>}
@@ -583,6 +840,8 @@ const ComposePage = () => {
                                     <td>{selectedEdition}</td>
                                     <td>{selectedSubCategory1}</td>
                                     <td>{selectedSubCategory2}</td>
+                                    <td>{selectedDate ? formatDate(selectedDate) : ''}</td>
+                                    <td>{selectedSundays.length > 0 ? selectedSundays.map((date) => formatDate(date)).join(', ') : ''}</td>
                                     <td>{extraCharacters}</td>
                                     {/* Conditionally render additional data based on checkbox states */}
                                     {isTickAdded && <td>Tick added</td>}
@@ -632,7 +891,7 @@ const ComposePage = () => {
                     </div>
                     <div className="composepage-btn">
                         <Link to="/paymentpage">
-                            <button type="button">Proceed To Payment</button>
+                            <button type="button" onClick={handlePhonePePayment}>Proceed To Payment</button>
                         </Link>
                     </div>
                 </div>
