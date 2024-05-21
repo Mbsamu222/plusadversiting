@@ -98,11 +98,9 @@ const Dropdown = () => {
 
     const handleSelectCategory = (e) => {
         setSelectedCategory(e.target.value);
-        setSelectedEdition(e.target.value === 'Matrimonial' ? 'All Edition' : selectedEdition);
+        setSelectedEdition(e.target.value);
         setShowDropdown3(true);
-        setShowImagePopup1(true);
-        setShowImagePopup2(true);
-        setShowImagePopup3(true);
+        
     };
 
     const handleSelectEdition = (e) => {
