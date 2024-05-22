@@ -601,7 +601,6 @@ label input {
     border-bottom: none;
     /* Remove border-bottom for the last cell in each row */
 }
-
 .payment-options {
     display: flex;
     justify-content: space-between;

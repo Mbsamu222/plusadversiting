@@ -24,24 +24,19 @@ const handlePhonePePayment = async () => {
     }
 };
 
+
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedSundays, setSelectedSundays] = useState(null);
+    const [selectedSundays, setSelectedSundays] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
 
-    // Function to check if a date is a Sunday
-    const isSunday = (date) => {
-        const day = date.getDay();
-        return day === 0; // 0 represents Sunday
-    };
+    const isSunday = (date) => date.getDay() === 0;
 
-    // Custom filter for disabling days that are not Sundays
     const filterPassedDate = (date) => {
         const today = new Date();
         return date.getDay() === 0 && date > today;
     };
 
-    // Function to format date as "DD/MM/YYYY"
     const formatDate = (date) => {
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -49,7 +44,6 @@ const CustomCalendar = () => {
         return `${day}/${month}/${year}`;
     };
 
-    // Function to handle date selection and set selected Sunday
     const handleDateSelect = (date) => {
         setSelectedDate(date);
         setShowPopup(false);
@@ -58,7 +52,7 @@ const CustomCalendar = () => {
             const nextSundays = [date];
             for (let i = 1; i < 4; i++) {
                 const nextSunday = new Date(date);
-                nextSunday.setDate(date.getDate() + i * 7); // Increment by 7 days for next Sunday
+                nextSunday.setDate(date.getDate() + i * 7);
                 nextSundays.push(nextSunday);
             }
             setSelectedSundays(nextSundays);
@@ -70,7 +64,6 @@ const CustomCalendar = () => {
 
     const handleSelectOption = (option) => {
         setShowPopup(false);
-        console.log('Selected option:', option);
 
         // Clear previously selected dates
         setSelectedDate(null);
@@ -78,13 +71,14 @@ const CustomCalendar = () => {
 
         if (option instanceof Date) {
             setSelectedDate(option);
+            setSelectedSundays([option]); // Set selectedSundays to an array with the selected date
         }
 
         if (Array.isArray(option)) {
             setSelectedSundays(option);
+            setSelectedDate(option[0]); // Set selectedDate to the first date in the array
         }
     };
-
 
 
     return (
@@ -103,7 +97,7 @@ const CustomCalendar = () => {
             />
             <Popup
                 trigger={<div className="popup-trigger"></div>}
-                position="left "
+                position="left"
                 open={showPopup}
                 onClose={() => setShowPopup(false)}
             >
@@ -121,12 +115,11 @@ const CustomCalendar = () => {
                         </div>
                     </ul>
                     <ul>
-                        {selectedSundays &&
-                            selectedSundays.map((sunday, index) => (
-                                <li key={index} onClick={() => handleSelectOption(sunday)}>
-                                    {formatDate(sunday)} {/* Format date here */}
-                                </li>
-                            ))}
+                        {selectedSundays.map((sunday, index) => (
+                            <li key={index}>
+                                {formatDate(sunday)}
+                            </li>
+                        ))}
                         <div className='buttons-container2'>
                             <button onClick={() => handleSelectOption(selectedSundays)}> Select 4 Sundays</button>
                         </div>
@@ -137,11 +130,9 @@ const CustomCalendar = () => {
     );
 };
 
-// Custom input component for DatePicker
 const CustomInput = ({ value, onClick }) => (
     <input type="text" value={value} onClick={onClick} readOnly />
 );
-
 
 const PriceInfo = ({ basePrice, extraCharacters, extraPrice, totalPrice }) => {
     return (
@@ -197,7 +188,10 @@ const ComposePage = () => {
         { value: '#ffccff', label: 'Light Purple' },
     ];
 
-
+    useEffect(() => {
+        setSelectedSubCategory1('');
+        setSelectedSubCategory2('');
+    }, [selectedPublication, selectedCategory, selectedEdition]);
 
 
 
@@ -332,6 +326,10 @@ const ComposePage = () => {
                     { value: 'Situation Vacant', label: 'Situation Vacant' },
 
                 ];
+            case 'Business Off/Edu/Tender':
+                return [
+                    { value: 'Business Offer', label: 'Business Offer' },
+                ];
             default:
                 return [];
         }
@@ -456,10 +454,10 @@ const ComposePage = () => {
                     { value: 'TimeShare', label: 'TimeShare' },
                     // Add more options as needed
                 ];
-                case 'Real Estate Other' :
-                    return [
-                        { value: 'Architects ', label: 'Architects ' },{ value: 'Bricks / Concrete Blocks', label: 'Bricks / Concrete Blocks' },{ value: 'Building Contractors', label: 'Building Contractors' },{ value: 'Building Materials', label: 'Building Materials' },{ value: 'Buzaar Cement', label: 'Buzaar Cement' },{ value: 'Consultants', label: 'Consultants' },{ value: 'General', label: 'General' },{ value: 'Hardware', label: 'Hardware' },{ value: 'Home Decor', label: 'Home Decor' },{ value: 'Home Finance', label: 'Home Finance' },{ value: 'Joint Development', label: 'Joint Development' },{ value: 'Marble', label: 'Marble' },{ value: 'Painting Contractors', label: 'Painting Contractors' },{ value: 'Plumbing/maintenance', label: 'Plumbing/maintenance' },{ value: 'Public Notice', label: 'Public Notice' },{ value: 'Turnkey Developers', label: 'Turnkey Developers' },
-                    ];
+            case 'Real Estate Other':
+                return [
+                    { value: 'Architects ', label: 'Architects ' }, { value: 'Bricks / Concrete Blocks', label: 'Bricks / Concrete Blocks' }, { value: 'Building Contractors', label: 'Building Contractors' }, { value: 'Building Materials', label: 'Building Materials' }, { value: 'Buzaar Cement', label: 'Buzaar Cement' }, { value: 'Consultants', label: 'Consultants' }, { value: 'General', label: 'General' }, { value: 'Hardware', label: 'Hardware' }, { value: 'Home Decor', label: 'Home Decor' }, { value: 'Home Finance', label: 'Home Finance' }, { value: 'Joint Development', label: 'Joint Development' }, { value: 'Marble', label: 'Marble' }, { value: 'Painting Contractors', label: 'Painting Contractors' }, { value: 'Plumbing/maintenance', label: 'Plumbing/maintenance' }, { value: 'Public Notice', label: 'Public Notice' }, { value: 'Turnkey Developers', label: 'Turnkey Developers' },
+                ];
             case 'Rental':
                 return [
                     { value: 'Accommodation Wanted ', label: 'Accommodation Wanted ' },
@@ -487,7 +485,11 @@ const ComposePage = () => {
                 ];
             case 'Situation Vacant':
                 return [
-                    { value: 'Bpo', label: 'Bpo' },{ value: 'Computers IT', label: 'Computers IT' },{ value: 'Consultants', label: 'Consultants' },{ value: 'Couriers', label: 'Couriers' },{ value: 'Detective Services', label: 'Detective Services' },{ value: 'Finance', label: 'Finance' },{ value: 'Garments', label: 'Garments' },{ value: 'General', label: 'General' },{ value: 'Hotels', label: 'Hotels' },{ value: 'House Keeping', label: 'House Keeping' },{ value: 'Hrd Admn', label: 'Hrd Admn' },{ value: 'Insurance', label: 'Insurance' },{ value: 'Labour (Overseas)', label: 'Labour (Overseas)' },{ value: 'Logistics', label: 'Logistics' },{ value: 'Marketing', label: 'Marketing' },{ value: 'Medical', label: 'Medical' },{ value: 'Overseas', label: 'Overseas' },{ value: 'Placement Assistance', label: 'Placement Assistance' },{ value: 'Printing/epublishing', label: 'Printing/epublishing' },{ value: 'Public Appointment', label: 'Public Appointment' },{ value: 'R&d/lab', label: 'R&d/lab' },{ value: 'Secretarial', label: 'Secretarial' },{ value: 'Shipping/cargo', label: 'Shipping/cargo' },{ value: 'Skilled Labour', label: 'Skilled Labour' },{ value: 'Stores/purchase', label: 'Stores/purchase' },{ value: 'Technical', label: 'Technical' },{ value: 'Transcription(Med)', label: 'Transcription(Med)' },{ value: 'Training / Placements', label: 'Training / Placements' },{ value: 'Walkin', label: 'Walkin' }, 
+                    { value: 'Bpo', label: 'Bpo' }, { value: 'Computers IT', label: 'Computers IT' }, { value: 'Consultants', label: 'Consultants' }, { value: 'Couriers', label: 'Couriers' }, { value: 'Detective Services', label: 'Detective Services' }, { value: 'Finance', label: 'Finance' }, { value: 'Garments', label: 'Garments' }, { value: 'General', label: 'General' }, { value: 'Hotels', label: 'Hotels' }, { value: 'House Keeping', label: 'House Keeping' }, { value: 'Hrd Admn', label: 'Hrd Admn' }, { value: 'Insurance', label: 'Insurance' }, { value: 'Labour (Overseas)', label: 'Labour (Overseas)' }, { value: 'Logistics', label: 'Logistics' }, { value: 'Marketing', label: 'Marketing' }, { value: 'Medical', label: 'Medical' }, { value: 'Overseas', label: 'Overseas' }, { value: 'Placement Assistance', label: 'Placement Assistance' }, { value: 'Printing/epublishing', label: 'Printing/epublishing' }, { value: 'Public Appointment', label: 'Public Appointment' }, { value: 'R&d/lab', label: 'R&d/lab' }, { value: 'Secretarial', label: 'Secretarial' }, { value: 'Shipping/cargo', label: 'Shipping/cargo' }, { value: 'Skilled Labour', label: 'Skilled Labour' }, { value: 'Stores/purchase', label: 'Stores/purchase' }, { value: 'Technical', label: 'Technical' }, { value: 'Transcription(Med)', label: 'Transcription(Med)' }, { value: 'Training / Placements', label: 'Training / Placements' }, { value: 'Walkin', label: 'Walkin' },
+                ];
+            case 'Business Offer':
+                return [
+                    { value: 'For Sale', label: 'For Sale' }, { value: 'Agents Wanted', label: 'Agents Wanted' }, { value: 'Consultants', label: 'Consultants' }, { value: 'Contractors', label: 'Contractors' }, { value: 'Finance', label: 'Finance' }, { value: 'General', label: 'General' }, { value: 'Immigration Services', label: 'Immigration Services' }, { value: 'Import/export', label: 'Import/export' }, { value: 'Insurance', label: 'Insurance' }, { value: 'Legal', label: 'Legal' }, { value: 'Logistics', label: 'Logistics' }, { value: 'Management', label: 'Management' }, { value: 'Others', label: 'Others' }, { value: 'Partnerships', label: 'Partnerships' }, { value: 'Project', label: 'Project' }, { value: 'Shares/investments', label: 'Shares/investments' }, { value: 'Tax Planning', label: 'Tax Planning' }, { value: 'Manufacturer', label: 'Manufacturer' },
                 ];
             default:
                 return [];
@@ -861,7 +863,7 @@ const ComposePage = () => {
                                     {isTickAdded && <th>Add Tick</th>}
                                     {isBoldText && <th>Add Bold</th>}
                                     {selectedBgColor !== '#ffffff' && <th>Add BG Color</th>}
-                                    <th>(GST Extra 5 %)Total Amount</th>
+                                    <th>Total Amount (GST Extra 5 %)</th>
                                 </tr>
                             </thead>
                             <tbody>
