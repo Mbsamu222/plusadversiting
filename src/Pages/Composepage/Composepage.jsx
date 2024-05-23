@@ -65,18 +65,14 @@ const CustomCalendar = () => {
     const handleSelectOption = (option) => {
         setShowPopup(false);
 
-        // Clear previously selected dates
-        setSelectedDate(null);
-        setSelectedSundays([]);
-
         if (option instanceof Date) {
             setSelectedDate(option);
-            setSelectedSundays([option]); // Set selectedSundays to an array with the selected date
+            setSelectedSundays([]);
         }
 
         if (Array.isArray(option)) {
             setSelectedSundays(option);
-            setSelectedDate(option[0]); // Set selectedDate to the first date in the array
+            setSelectedDate(option[0]);
         }
     };
 
@@ -160,9 +156,9 @@ const ComposePage = () => {
 
 
     // Define state variables for selected options and textarea content
-    const [selectedPublication, setSelectedPublication] = useState(initialSelectedPublication);
-    const [selectedCategory, setSelectedCategory] = useState(initialSelectedCategory);
-    const [selectedEdition, setSelectedEdition] = useState(initialSelectedEdition);
+    const [selectedPublication] = useState(initialSelectedPublication);
+    const [selectedCategory] = useState(initialSelectedCategory);
+    const [selectedEdition] = useState(initialSelectedEdition);
     const [selectedInputLabel, setSelectedInputLabel] = useState(initialSelectedInputLabel);
     const [selectedSubCategory1, setSelectedSubCategory1] = useState('');
     const [selectedSubCategory2, setSelectedSubCategory2] = useState('');
@@ -506,7 +502,8 @@ const ComposePage = () => {
         setSelectedSubCategory2(e.target.value);
     };
     const shouldBlink = !(selectedSubCategory1 && selectedSubCategory2);
-
+    
+    const isAnimationStopped = selectedSubCategory1 && selectedSubCategory2;
 
     const handleTextAreaChange = (e) => {
 
@@ -657,46 +654,17 @@ const ComposePage = () => {
                     <h3>Your Package</h3>
                     <div>
                         <label htmlFor="selectedPublication"></label>
-                        <select
-                            id="selectedPublication"
-                            value={selectedPublication}
-                            onChange={(e) => setSelectedPublication(e.target.value)}
-                        >
-                            {publicationOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        <div id="selectedPublication">{publicationOptions.find(option => option.value === selectedPublication)?.label}</div>
                     </div>
                     <div>
                         <label htmlFor="selectedCategory"></label>
-                        <select
-                            id="selectedCategory"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            {categoryOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        <div id="selectedCategory">{categoryOptions.find(option => option.value === selectedCategory)?.label}</div>
                     </div>
                     <div>
                         <label htmlFor="selectedEdition"></label>
-                        <select
-                            id="selectedEdition"
-                            value={selectedEdition}
-                            onChange={(e) => setSelectedEdition(e.target.value)}
-                        >
-                            {editionOptions.map((option) => (
-                                <option key={option.value} value={option.value} disabled={option.disabled}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        <div id="selectedEdition">{editionOptions.find(option => option.value === selectedEdition)?.label}</div>
                     </div>
+
                     <div class="select-input-label">
                         {selectedInputLabel && (
                             <span style={{ marginLeft: '5px' }}>{selectedInputLabel}</span>
@@ -732,7 +700,7 @@ const ComposePage = () => {
                 </div>
                 <div>
                     <div className="container">
-                        <div className="icon">
+                        <div className={`icon ${isAnimationStopped ? 'stop-animation' : ''}`}>
                             <div className="arrow"></div>
                         </div>
                         <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>
@@ -788,7 +756,7 @@ const ComposePage = () => {
                         />
                     </div>
                     <div className={`preview-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
-                        <p>Your Preview</p>
+                        <p>Ads Preview (Tentative preview not for actual paper print)</p>
                         <textarea
                             id="previewTextArea"
                             rows={10}
