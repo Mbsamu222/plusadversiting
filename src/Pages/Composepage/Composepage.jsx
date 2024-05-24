@@ -25,16 +25,25 @@ const handlePhonePePayment = async () => {
 };
 
 
+
+
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSundays, setSelectedSundays] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    
 
     const isSunday = (date) => date.getDay() === 0;
 
     const filterPassedDate = (date) => {
         const today = new Date();
-        return date.getDay() === 0 && date > today;
+        const dayOfWeek = date.getDay();
+        const dayDifference = 7 - dayOfWeek;
+        const fridayBefore = new Date(date);
+        fridayBefore.setDate(date.getDate() - dayDifference + 5);
+        fridayBefore.setHours(18, 0, 0, 0); // Friday at 6:00 PM
+
+        return dayOfWeek === 0 && date > today && today <= fridayBefore;
     };
 
     const formatDate = (date) => {
@@ -64,18 +73,23 @@ const CustomCalendar = () => {
 
     const handleSelectOption = (option) => {
         setShowPopup(false);
-
+    
         if (option instanceof Date) {
             setSelectedDate(option);
             setSelectedSundays([]);
         }
-
-        if (Array.isArray(option)) {
+    
+        if (Array.isArray(option) && option.length === 4) {
             setSelectedSundays(option);
             setSelectedDate(option[0]);
         }
+    
+        if (Array.isArray(option) && option.length === 1) {
+            setSelectedDate(option[0]);
+            setSelectedSundays([]);
+        }
     };
-
+    
 
     return (
         <div className="custom-calendar">
@@ -172,6 +186,7 @@ const ComposePage = () => {
     const [isBoldText, setIsBoldText] = useState(false);
     const [paymentOption, setPaymentOption] = useState('');
     const [couponCode, setCouponCode] = useState('');
+    const [isSaved, setIsSaved] = useState(false);
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
     const [selectedDate] = useState(null);
     const [selectedSundays] = useState([]);
@@ -502,8 +517,12 @@ const ComposePage = () => {
         setSelectedSubCategory2(e.target.value);
     };
     const shouldBlink = !(selectedSubCategory1 && selectedSubCategory2);
-    
+
     const isAnimationStopped = selectedSubCategory1 && selectedSubCategory2;
+
+    const handleSaveAndContinue = () => {
+        setIsSaved(true);
+    };
 
     const handleTextAreaChange = (e) => {
 
@@ -650,26 +669,30 @@ const ComposePage = () => {
                 <div className='page-logo'>
                     <img src={the_hindu_logo} alt="" />
                 </div>
-                <div className="side menu">
+                <div className="side-menu">
                     <h3>Your Package</h3>
-                    <div>
-                        <label htmlFor="selectedPublication"></label>
-                        <div id="selectedPublication">{publicationOptions.find(option => option.value === selectedPublication)?.label}</div>
-                    </div>
-                    <div>
-                        <label htmlFor="selectedCategory"></label>
-                        <div id="selectedCategory">{categoryOptions.find(option => option.value === selectedCategory)?.label}</div>
-                    </div>
-                    <div>
-                        <label htmlFor="selectedEdition"></label>
-                        <div id="selectedEdition">{editionOptions.find(option => option.value === selectedEdition)?.label}</div>
-                    </div>
-
-                    <div class="select-input-label">
+                    <div className="details-container">
+                        <div className="detail-item">
+                            <label htmlFor="selectedPublication">Publication</label>
+                            <div id="selectedPublication">{publicationOptions.find(option => option.value === selectedPublication)?.label}</div>
+                        </div>
+                        <div className="detail-item">
+                            <label htmlFor="selectedCategory">Category</label>
+                            <div id="selectedCategory">{categoryOptions.find(option => option.value === selectedCategory)?.label}</div>
+                        </div>
+                        <div className="detail-item">
+                            <label htmlFor="selectedEdition">Edition</label>
+                            <div id="selectedEdition">{editionOptions.find(option => option.value === selectedEdition)?.label}</div>
+                        </div>
                         {selectedInputLabel && (
-                            <span style={{ marginLeft: '5px' }}>{selectedInputLabel}</span>
+                            <div className="detail-item">
+                                <span style={{ marginLeft: '5px' }}>{selectedInputLabel}</span>
+                            </div>
                         )}
                     </div>
+                </div>
+                <div className='modify-button'>
+                    <button>Modify it</button>
                 </div>
                 <div className='upload'>
                     <p>Note: For certain ads, supporting documents will be required by the publication house. You will be contacted for the same. Upload now or send on <a href="mailto:sales@plusadversiting@gmail.com">sales@plusadversiting@gmail.com</a></p>
@@ -687,9 +710,10 @@ const ComposePage = () => {
                         <span>-{selectedEdition}</span>
                         <span>-{selectedSubCategory1}</span>
                         <span>-{selectedSubCategory2}</span>
-                        <span>{selectedDate ? formatDate(selectedDate) : ''}</span>
+                        <span>-Dates:</span>
+                        {selectedDate && <span>{formatDate(selectedDate)}</span>}
                         {selectedSundays.length > 0 && (
-                            <span>-Sundays: {selectedSundays.map((date) => formatDate(date)).join(', ')}</span>
+                            <span>{selectedSundays.map((date) => formatDate(date)).join(', ')}</span>
                         )}
                         {isTickAdded && <span>-Tick</span>}
                         {isBoldText && <span>-Bold</span>}
@@ -704,9 +728,9 @@ const ComposePage = () => {
                             <div className="arrow"></div>
                         </div>
                         <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>
-                            Select SubCategory2
+                            Select
                         </h3>
-                        <div className={`input-field ${shouldBlink && (!selectedSubCategory1 || !selectedSubCategory2) ? 'blinking' : 'default-border'}`}>
+                        <div className={`input-field ${shouldBlink && (!selectedSubCategory1 ) ? 'blinking' : 'default-border'}`}>
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
                                 id="selectedSubCategory1"
@@ -729,7 +753,7 @@ const ComposePage = () => {
                                     value={selectedSubCategory2}
                                     onChange={handleSubCategory2Change}
                                 >
-                                    <option value="">-Subcategory-</option>
+                                    <option value="">-Subcategory-2</option>
                                     {subCategory2Options.map((option) => (
                                         <option key={option.value} value={option.value}>
                                             {option.label}
@@ -739,7 +763,7 @@ const ComposePage = () => {
                             </div>
                         )}
                     </div>
-                    <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                    <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''} `}>
                         <h3>Compose Area</h3>
                     </div>
                     <div className={`text-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
@@ -769,14 +793,16 @@ const ComposePage = () => {
                         />
                     </div>
                     <div className={`calendar-container ${!selectedSubCategory2 ? 'disabled' : ''}`}>
-                        <div class="icon1">
-                            <div class="arrow1"></div>
-                        </div>
+                        {isAnimationStopped && (
+                            <div class="icon1">
+                                <div class="arrow1"></div>
+                            </div>
+                        )}
                         <p>Calendar</p>
                         {/* Include CustomCalendar component here */}
                         <CustomCalendar />
                     </div>
-                    <div className="content">
+                    <div className={`content ${!selectedSubCategory2 ? 'disabled' : ''}`}>
                         <label htmlFor="addTick">Add Tick</label>
                         <input
                             type="checkbox"
@@ -814,87 +840,94 @@ const ComposePage = () => {
                             totalPrice={totalPrice}
                         />
                     </div>
-                    <div className="table-content-box">
-                        <h3>Your Package Content</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Publication</th>
-                                    <th>Category</th>
-                                    <th>Edition</th>
-                                    <th>Subcategory 1</th>
-                                    <th>Subcategory 2</th>
-                                    <th>Date</th>
-                                    <th>Date</th>
-                                    <th>Extra Lines</th>
-                                    {/* Conditionally render additional labels based on checkbox states */}
-                                    {isTickAdded && <th>Add Tick</th>}
-                                    {isBoldText && <th>Add Bold</th>}
-                                    {selectedBgColor !== '#ffffff' && <th>Add BG Color</th>}
-                                    <th>Total Amount (GST Extra 5 %)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{selectedPublication}</td>
-                                    <td>{selectedCategory}</td>
-                                    <td>{selectedEdition}</td>
-                                    <td>{selectedSubCategory1}</td>
-                                    <td>{selectedSubCategory2}</td>
-                                    <td>{selectedDate ? formatDate(selectedDate) : ''}</td>
-                                    <td>{selectedSundays.length > 0 ? selectedSundays.map((date) => formatDate(date)).join(', ') : ''}</td>
-                                    <td>{extraCharacters}</td>
-                                    {/* Conditionally render additional data based on checkbox states */}
-                                    {isTickAdded && <td>Tick added</td>}
-                                    {isBoldText && <td>Bold text</td>}
-                                    {selectedBgColor !== '#ffffff' && <td>{selectedBgColor}</td>}
-                                    <td>Rs. {totalPrice}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className='save-button'>
+                        <button onClick={handleSaveAndContinue}>Save & Continue</button>
                     </div>
-                    <div className="payment-options">
-                        <p className="payment-info-box"></p>
-                        <div>
-                            <input
-                                type="radio"
-                                id="nilTransaction"
-                                name="paymentOption"
-                                value="nilTransaction"
-                                checked={paymentOption === 'nilTransaction'}
-                                onChange={handlePaymentOptionChange}
-                            />
-                            <label htmlFor="nilTransaction">Nill Transaction Charges for payment (G Pay, Bank Transfer (IMPS))</label>
-                        </div>
-                        <p className="payment-options-or">(or)</p>
-                        <p className="payment-info-box"></p>
-                        <div>
-                            <input
-                                type="radio"
-                                id="paymentGateway"
-                                name="paymentOption"
-                                value="paymentGateway"
-                                checked={paymentOption === 'paymentGateway'}
-                                onChange={handlePaymentOptionChange}
-                            />
-                            <label htmlFor="paymentGateway">Payment Gateway (2.5% Extra Charges)</label>
-                        </div>
-                    </div>
-                    <div className="coupon-code-container">
-                        <p>Coupon Code</p>
-                        <input
-                            type="text"
-                            placeholder="Enter Coupon Code"
-                            value={couponCode}
-                            onChange={handleCouponCodeChange}
-                        />
-                        <button onClick={handleSubmitCouponCode}>Submit</button>
-                    </div>
-                    <div className="composepage-btn">
-                        <Link to="/paymentpage">
-                            <button type="button" onClick={handlePhonePePayment}>Proceed To Payment</button>
-                        </Link>
-                    </div>
+                    {isSaved && (
+                        <>
+                            <div className="table-content-box">
+                                <h3>Your Package Content</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Publication</th>
+                                            <th>Category</th>
+                                            <th>Edition</th>
+                                            <th>Subcategory 1</th>
+                                            <th>Subcategory 2</th>
+                                            <th>Date</th>
+                                            <th>Sundays</th>
+                                            <th>Extra Lines</th>
+                                            {/* Conditionally render additional labels based on checkbox states */}
+                                            {isTickAdded && <th>Add Tick</th>}
+                                            {isBoldText && <th>Add Bold</th>}
+                                            {selectedBgColor !== '#ffffff' && <th>Add BG Color</th>}
+                                            <th>Total Amount (GST Extra 5 %)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{selectedPublication}</td>
+                                            <td>{selectedCategory}</td>
+                                            <td>{selectedEdition}</td>
+                                            <td>{selectedSubCategory1}</td>
+                                            <td>{selectedSubCategory2}</td>
+                                            <td>{selectedDate ? formatDate(selectedDate) : ''}</td>
+                                            <td>{selectedSundays.length > 0 ? selectedSundays.map((date) => formatDate(date)).join(', ') : ''}</td>
+                                            <td>{extraCharacters}</td>
+                                            {/* Conditionally render additional data based on checkbox states */}
+                                            {isTickAdded && <td>Tick added</td>}
+                                            {isBoldText && <td>Bold text</td>}
+                                            {selectedBgColor !== '#ffffff' && <td>{selectedBgColor}</td>}
+                                            <td>Rs. {totalPrice}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="payment-options">
+                                <p className="payment-info-box"></p>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="nilTransaction"
+                                        name="paymentOption"
+                                        value="nilTransaction"
+                                        checked={paymentOption === 'nilTransaction'}
+                                        onChange={handlePaymentOptionChange}
+                                    />
+                                    <label htmlFor="nilTransaction">Nill Transaction Charges for payment (G Pay, Bank Transfer (IMPS))</label>
+                                </div>
+                                <p className="payment-options-or">(or)</p>
+                                <p className="payment-info-box"></p>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="paymentGateway"
+                                        name="paymentOption"
+                                        value="paymentGateway"
+                                        checked={paymentOption === 'paymentGateway'}
+                                        onChange={handlePaymentOptionChange}
+                                    />
+                                    <label htmlFor="paymentGateway">Payment Gateway (2.5% Extra Charges)</label>
+                                </div>
+                            </div>
+                            <div className="coupon-code-container">
+                                <p>Coupon Code</p>
+                                <input
+                                    type="text"
+                                    placeholder="Enter Coupon Code"
+                                    value={couponCode}
+                                    onChange={handleCouponCodeChange}
+                                />
+                                <button onClick={handleSubmitCouponCode}>Submit</button>
+                            </div>
+                            <div className="composepage-btn">
+                                <Link to="/paymentpage">
+                                    <button type="button" onClick={handlePhonePePayment}>Proceed To Payment</button>
+                                </Link>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

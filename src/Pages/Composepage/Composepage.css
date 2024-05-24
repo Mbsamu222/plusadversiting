@@ -27,40 +27,82 @@
 }
 .composepage-left{
     height: 100vh;
-    width: 35vh;
+    width: 45vh;
     margin-right: 15px;
    background-color: #fd1490;
 }
 .page-logo {
     display: flex;
-    margin-left: 60px;
+    margin-left: 50px;
     margin-top: 50px;
     
 
 }
-.side.menu {
+.side-menu {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 300px;
+    width: 225px;
     margin-top: 5px;
+    margin-left: 25px;
     margin-right: 20px;
 }
 
-.side.menu h3 {
+.side-menu h3 {
     font-size: 20px;
-    color:white  ;
+    color: white;
 }
-
 .side.menu label,
 select {
-    padding: 8px;
-    width: 200px;
+    padding: 8px 4px;
+    width: 150px;
     border-radius: 6px;
 }
 
-.side.menu input label {
-    color: white;
+
+.details-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid grey;
+    padding: 2px 0;
+}
+
+.detail-item:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
+}
+
+.detail-item label {
+    color: black;
+    font-weight: bold;
+}
+
+.detail-item div, .detail-item span {
+    color: black;
+    margin-top: 5px;
+}
+.modify-button{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.modify-button button{
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+} 
+.modify-button button:hover{
+    background-color: #0056b3;
 }
 .icon {
     position: absolute;
@@ -70,9 +112,9 @@ select {
     margin-bottom: -35px;
     margin-left: 20px;
     cursor: pointer;
-  }
-  
-  .arrow {
+}
+
+.arrow {
     position: absolute;
     top: 12px;
     width: 85%;
@@ -80,38 +122,45 @@ select {
     background-color: #3c8cee;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
     animation: arrow 600ms linear infinite;
-  }
-  
-  .arrow::after, .arrow::before {
+}
+
+.arrow::after, .arrow::before {
     content: '';
     position: absolute;
     width: 48%;
     height: 6px;
     right: -6px;
     background-color: #3c8cee;
-  }
-  
-  .arrow::after {
+}
+
+.arrow::after {
     top: -8px;
     transform: rotate(45deg);
-  }
-  
-  .arrow::before {
+}
+
+.arrow::before {
     top: 8px;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
     transform: rotate(-45deg);
-  }
-  @keyframes arrow {
-      0% {
+}
+
+@keyframes arrow {
+    0% {
         left: 0;
-      }
-      50% {
-        left: 5px;
-      }
-      100% {
-        left: 0;
-      }
     }
+    50% {
+        left: 5px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+/* New CSS to stop animation */
+.stop-animation .arrow {
+    animation: none;
+}
+
     .container {
         display: flex;
         gap: 10px;
@@ -166,11 +215,11 @@ select {
     }
     
     .static {
-        border: 4px solid #fd1490; /* Static border color */
+        border: 4px solid #60856e; /* Static border color */
     }
     
     .default-border {
-        border: 4px solid #fd1490; /* Default border color */
+        border: 4px solid #14b552; /* Default border color */
     }
     
     @keyframes blinkBorder {
@@ -205,7 +254,7 @@ select {
     color: white;
     font-weight: 600;
     border-radius: 7px;
-    margin-top: 30px;
+    margin-top: 0px;
     margin-bottom: 10px;
     margin-left: 5px;
 }
@@ -470,20 +519,20 @@ select {
 .modal-content .buttons-container1 button,
 .modal-content .buttons-container2 button {
     /* Adjusted styles */
-    background-color: #DAA520;
+    background-color: #007bff;
     font-size: 15px;
-    font-weight: 400;
-    color: black;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
     border: none;
-    border-radius: 28px;
-    padding: 8px 16px; /* Adjust padding as needed */
+    border-radius: 8px;
+    padding: 12px 16px; /* Adjust padding as needed */
     cursor: pointer;
 }
 
 .modal-content .buttons-container1 button:hover,
 .modal-content .buttons-container2 button:hover {
     /* Hover styles */
-    background-color: #ffffff;
+    background-color: #0056b3;
 }
 
 .price-info {
@@ -491,7 +540,7 @@ select {
     justify-content:space-around;
     align-items: center;
     height: 40px;
-    width: 1100px;
+    width: 1150px;
     background-color: rgb(251, 251, 59) ;
     color: black;
     font-size: medium;
@@ -521,8 +570,8 @@ select {
     color: white;
     font-weight: 600;
     border-radius: 5px;
-    margin-top: 60px;
-    margin-left: 5px;
+    margin-top: 40px;
+    margin-left: 2px;
     width: 275px;
 }
 
@@ -554,19 +603,37 @@ label input {
 .upload-button:hover {
     background-color: #0056b3;
 }
-
+.save-button{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -20px;
+    margin-bottom: 25px;
+    margin-right: 40px;
+}
+.save-button button{
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.save-button button:hover{
+    background-color: #0056b3;
+}
 .table-content-box {
     margin-top: -20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
-    width: 95%;
+    width: 100%;
     /* Adjust width as needed */
     background-color:#3c8cee ;
     overflow-x: auto;
     /* Add horizontal scroll if content exceeds width */
 }
-
 .table-content-box h3 {
     display: flex;
     align-items: center;
@@ -642,7 +709,7 @@ label input {
     justify-content: flex-end;
     align-items: center;
     padding: 10px; /* Add padding for spacing */
-    margin-top: 20px;
+    margin-top: 10px;
     margin-right: 300px;
     border-radius: 5px; /* Rounded corners for the container */
 }
@@ -654,13 +721,13 @@ label input {
     margin-right: -5px; /* Space between the "Apply Coupon Code" text and the input field */
     color: rgb(255, 255, 255); /* White text color for the text */
     background-color: #3c8cee;
-    height: 35px;
+    height: 30px;
     width: 140px;
 }
 
 .coupon-code-container input {
     border: 1px solid #000000; /* Black border for the input field */
-    height: 35px; /* Decrease the height of the input field */
+    height: 30px; /* Decrease the height of the input field */
     padding: 6px; /* Add padding for spacing inside the input field */
 }
 
@@ -668,7 +735,7 @@ label input {
     background-color: #007bff; /* Blue color for the Submit button */
     color: white;
     border: none;
-    height: 35px;
+    height: 30px;
     width: 80px;
     border-radius: 9px;
     margin-left: 5px;
@@ -689,10 +756,116 @@ label input {
     color: #fff;
     border: none;
     font-size: 16px;
+    font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .composepage-btn button:hover {
     background-color: #0056b3;
+}
+
+@media screen and (min-width: 1920px) and (min-height: 1080px) {
+    .marquee-container {
+        font-size: x-large;
+    }
+
+    .composepage-left {
+        width: 50vh;
+    }
+
+    .side-menu {
+        width: 250px;
+    }
+
+    .details-container {
+        padding: 15px;
+    }
+
+    .icon {
+        width: 72px;
+        height: 32px;
+        margin-bottom: -38px;
+        margin-left: 22px;
+    }
+
+    .arrow {
+        top: 14px;
+        width: 88%;
+    }
+
+    .arrow::before,
+    .arrow::after {
+        width: 50%;
+        right: -8px;
+    }
+
+    .arrow1 {
+        top: 2px;
+        width: 88%;
+    }
+
+    .arrow1::before,
+    .arrow1::after {
+        width: 52%;
+        right: -5px;
+    }
+
+    .calendar-container {
+        margin-top: -65px;
+        margin-bottom: -45px;
+    }
+
+    .preview-area p {
+        margin-top: -22px;
+    }
+
+    .icon1 {
+        width: 38px;
+        height: 12px;
+        margin-bottom: -40px;
+        margin-top: -28px;
+        margin-left: 115px;
+    }
+
+    .modal-content {
+        margin-top: -170px;
+        margin-left: -350px;
+    }
+
+    .modal-content img {
+        margin-top: -75px;
+    }
+
+    .modal-content .selectedDate {
+        margin-top: 45px;
+    }
+
+    .price-info {
+        width: 1180px;
+    }
+
+    .upload {
+        width: 285px;
+    }
+
+    .save-button {
+        margin-top: -10px;
+    }
+
+    .table-content-box {
+        margin-top: -15px;
+    }
+
+    .payment-options {
+        margin-bottom: -25px;
+    }
+
+    .coupon-code-container {
+        margin-right: 320px;
+    }
+
+    .composepage-btn {
+        margin-top: -65px;
+    }
 }
