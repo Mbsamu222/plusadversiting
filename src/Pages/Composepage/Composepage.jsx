@@ -31,7 +31,7 @@ const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSundays, setSelectedSundays] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
-    
+
 
     const isSunday = (date) => date.getDay() === 0;
 
@@ -71,25 +71,18 @@ const CustomCalendar = () => {
         }
     };
 
+
     const handleSelectOption = (option) => {
         setShowPopup(false);
-    
+
         if (option instanceof Date) {
             setSelectedDate(option);
             setSelectedSundays([]);
-        }
-    
-        if (Array.isArray(option) && option.length === 4) {
+        } else if (Array.isArray(option) && option.length === 4) {
             setSelectedSundays(option);
             setSelectedDate(option[0]);
         }
-    
-        if (Array.isArray(option) && option.length === 1) {
-            setSelectedDate(option[0]);
-            setSelectedSundays([]);
-        }
     };
-    
 
     return (
         <div className="custom-calendar">
@@ -190,6 +183,7 @@ const ComposePage = () => {
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
     const [selectedDate] = useState(null);
     const [selectedSundays] = useState([]);
+    const [arrowPosition, setArrowPosition] = useState('start');
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
         { value: '#ccffff', label: 'Light Blue' },
@@ -507,14 +501,20 @@ const ComposePage = () => {
         }
     }, [selectedSubCategory1]);
 
-    const handleSubCategory1Change = (e) => {
-        setSelectedSubCategory1(e.target.value);
-        setSelectedSubCategory2('');
-
-
+    const handleSubCategory1Change = (event) => {
+        setSelectedSubCategory1(event.target.value);
+        if (event.target.value) {
+            setArrowPosition('between'); // Move arrow between fields
+        } else {
+            setArrowPosition('start'); // Reset arrow if Subcategory 1 is deselected
+        }
     };
-    const handleSubCategory2Change = (e) => {
-        setSelectedSubCategory2(e.target.value);
+
+    const handleSubCategory2Change = (event) => {
+        setSelectedSubCategory2(event.target.value);
+        if (event.target.value) {
+            setArrowPosition('start'); // Return arrow to start position
+        }
     };
     const shouldBlink = !(selectedSubCategory1 && selectedSubCategory2);
 
@@ -724,13 +724,17 @@ const ComposePage = () => {
                 </div>
                 <div>
                     <div className="container">
-                        <div className={`icon ${isAnimationStopped ? 'stop-animation' : ''}`}>
-                            <div className="arrow"></div>
-                        </div>
-                        <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>
-                            Select
-                        </h3>
-                        <div className={`input-field ${shouldBlink && (!selectedSubCategory1 ) ? 'blinking' : 'default-border'}`}>
+                        {!selectedSubCategory2 && (
+                            <div className={`icon ${isAnimationStopped ? 'stop-animation' : ''} ${arrowPosition}`}>
+                                <div className="arrow"></div>
+                            </div>
+                        )}
+                        {!selectedSubCategory2 && (
+                            <h3 className={`select-subcategorys ${selectedSubCategory1 && selectedSubCategory2 ? 'disable' : ''}`}>
+                                Select
+                            </h3>
+                        )}
+                        <div className={`input-field ${shouldBlink && !selectedSubCategory1 ? 'blinking' : 'default-border'}`}>
                             <label htmlFor="selectedSubCategory1"></label>
                             <select
                                 id="selectedSubCategory1"
@@ -764,7 +768,7 @@ const ComposePage = () => {
                         )}
                     </div>
                     <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''} `}>
-                        <h3>Compose Area</h3>
+                        <h3>Compose Text Area</h3>
                     </div>
                     <div className={`text-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
                         <label htmlFor="textArea"></label>
@@ -779,6 +783,11 @@ const ComposePage = () => {
                             disabled={!selectedSubCategory1 || !selectedSubCategory2}
                         />
                     </div>
+                    {isAnimationStopped && (
+                        <div className='icon2'>
+                            <div className={`arrow2 ${!selectedSubCategory2 ? 'disabled' : ''}`}></div>
+                        </div>
+                    )}
                     <div className={`preview-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
                         <p>Ads Preview (Tentative preview not for actual paper print)</p>
                         <textarea
@@ -803,14 +812,14 @@ const ComposePage = () => {
                         <CustomCalendar />
                     </div>
                     <div className={`content ${!selectedSubCategory2 ? 'disabled' : ''}`}>
-                        <label htmlFor="addTick">Add Tick</label>
+                        <label htmlFor="addTick">(Optical)  Tick</label>
                         <input
                             type="checkbox"
                             id="addTick"
                             checked={isTickAdded}
                             onChange={handleTickBoxChange}
                         />
-                        <label htmlFor="addBold">Add Bold</label>
+                        <label htmlFor="addBold">Bold</label>
                         <input
                             type="checkbox"
                             id="addBold"
@@ -832,6 +841,9 @@ const ComposePage = () => {
                             </select>
                         </div>
                     </div>
+                    <div className='save-button'>
+                        <button onClick={handleSaveAndContinue}>Save & Continue</button>
+                    </div>
                     <div className="price-info">
                         <PriceInfo
                             basePrice={basePrice}
@@ -839,9 +851,6 @@ const ComposePage = () => {
                             extraPrice={extraPrice}
                             totalPrice={totalPrice}
                         />
-                    </div>
-                    <div className='save-button'>
-                        <button onClick={handleSaveAndContinue}>Save & Continue</button>
                     </div>
                     {isSaved && (
                         <>

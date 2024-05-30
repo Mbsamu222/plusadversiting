@@ -27,7 +27,7 @@
 }
 .composepage-left{
     height: 100vh;
-    width: 45vh;
+    width: 35vh;
     margin-right: 15px;
    background-color: #fd1490;
 }
@@ -106,20 +106,33 @@ select {
 }
 .icon {
     position: absolute;
-    transform: translate(-50%,-50%);
     width: 68px;
     height: 30px;
-    margin-bottom: -35px;
-    margin-left: 20px;
     cursor: pointer;
+    transition: transform 0.6s ease; /* Smooth transition */
+}
+
+.icon.start {
+    transform: translate(-50%, -50%) translateX(20px);
+    top: 50%;
+}
+
+.icon.between {
+    transform: translate(-50%, -50%) translateX(400px); /* Adjust to position it between the fields */
+    top: 50%;
+}
+
+.icon.end {
+    transform: translate(-50%, -50%) translateX(20px);
+    top: 50%;
 }
 
 .arrow {
     position: absolute;
-    top: 12px;
+    top: -235px;
     width: 85%;
     height: 6px;
-    background-color: #3c8cee;
+    background-color: #fd1490;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
     animation: arrow 600ms linear infinite;
 }
@@ -130,7 +143,7 @@ select {
     width: 48%;
     height: 6px;
     right: -6px;
-    background-color: #3c8cee;
+    background-color: #fd1490;
 }
 
 .arrow::after {
@@ -161,117 +174,75 @@ select {
     animation: none;
 }
 
-    .container {
-        display: flex;
-        gap: 10px;
-        padding: 5px;
-        align-items: center;
-        padding-left: 5px;
-        border-radius: 10px;
-        margin-bottom: 5px;
-        margin-right: 15px;
-    }
-    
-    .container h3 {
-        font-size: 20px;
-        color: #fd1490;
-        margin-left: 55px;
-    }
-    
-    .input-field {
-        position: relative;
-        z-index: 0;
-        border-radius: 5px;
-        padding: 5px;
-        font-family: sans-serif;
-        font-weight: bold;
-        border: 4px solid transparent; /* Make the original border transparent */
-        overflow: hidden;
-    }
-    
-    .input-field select {
-        width: 200px; /* Adjust width as needed */
-        padding: 5px;
-        border: none;
-        outline: none;
-        background-color: transparent;
-        color: #000000;
-        font-weight: 600;
-        font-size: medium;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .input-field select:hover {
-        border: 2px solid #3c8cee; /* Border color on hover */
-    }
-    
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
-    
-    .blinking {
-        animation: blinkBorder 1s linear infinite; /* Apply the blinking animation */
-    }
-    
-    .static {
-        border: 4px solid #60856e; /* Static border color */
-    }
-    
-    .default-border {
-        border: 4px solid #14b552; /* Default border color */
-    }
-    
-    @keyframes blinkBorder {
-        0%, 49.9%, 100% {
-            border-color: #fd1490;
-        }
-        50%, 99.9% {
-            border-color: #3c8cee;
-        }
-    }
-    
-.horizonital-line-box {
-    margin: 10px auto;
-    /* Center horizontally with top and bottom margin */
-    width: 150px;
-    height: 19px;
-    font-size: 14px;
-    background-color: rgb(251, 251, 59);
-    border-radius: 5px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: 5px;
-}
-.content {
+.container {
     display: flex;
-    justify-content: space-between;
+    gap: 90px;
+    padding: 5px;
     align-items: center;
-    padding: 1px;
-    height: 40px;
-    width: calc(650px - 10px);
-    background-color: #3c8cee;
-    color: white;
+    padding-left: 5px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.container h3 {
+    font-size: 20px;
+    color: #fd1490;
+    margin-left: 65px;
+    margin-right: -70px;
+}
+
+.input-field {
+    position: relative;
+    z-index: 0;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: sans-serif;
+    font-weight: bold;
+    border: 4px solid transparent; /* Make the original border transparent */
+    overflow: hidden;
+}
+
+.input-field select {
+    width: 200px; /* Adjust width as needed */
+    padding: 5px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: #000000;
     font-weight: 600;
-    border-radius: 7px;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    margin-left: 5px;
+    font-size: medium;
+    position: relative;
+    z-index: 1;
 }
 
-.content label,
-.content input,
-.input-field1 {
-    margin-right: 5px;
-    padding-left: 30px;
-    
+.input-field select:hover {
+    border: 2px solid #3c8cee; /* Border color on hover */
 }
 
-.input-field1 select {
-    width: 150px;
-    /* Adjust width as needed */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
+.blinking {
+    animation: blinkBorder 1s linear infinite; /* Apply the blinking animation */
+}
+
+.static {
+    border: 4px solid #60856e; /* Static border color */
+}
+
+.default-border {
+    border: 4px solid #14b552; /* Default border color */
+}
+
+@keyframes blinkBorder {
+    0%, 49.9%, 100% {
+        border-color: #fd1490;
+    }
+    50%, 99.9% {
+        border-color: #3c8cee;
+    }
+}
 @keyframes zoomInfinity {
 
     0%,
@@ -291,18 +262,104 @@ select {
 .disable {
     animation: none;
 }
+.horizonital-line-box {
+    margin: 10px auto;
+    /* Center horizontally with top and bottom margin */
+    width: 180px;
+    height: 19px;
+    font-size: 14px;
+    background-color: rgb(251, 251, 59);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+.content {
+    display: flex;
+    justify-content: flex-start; /* Align items to the start */
+    align-items: center;
+    padding: 0px;
+    height: 40px;
+    width: calc(650px - 10px);
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    border-radius: 7px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    margin-left: -20px;
+}
+
+.content label,
+.content input,
+.input-field1 {
+    margin-right: 2px; /* Reduced margin-right */
+    padding-left: 10px; /* Reduced padding-left */
+}
+
+.input-field1 select {
+    width: 150px; /* Adjust width as needed */
+}
 
 .text-area {
     width: calc(33.33% - 10px);
     float: left;
-    margin-right: 5px;
+    margin-right: 35px;
     margin-bottom: -45px;
 }
-
+.icon2{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    width: 68px;
+    height: 20px;
+    margin-bottom: 85px;
+    margin-top: 90px;
+    margin-left: 380px;
+    cursor: pointer;
+    transform: rotate(180deg);
+}
+.arrow2{
+    position: absolute;
+    top: 15px;
+    width: 85%;
+    height: 6px;
+    background-color: #fd1490;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+    animation: arrow 600ms linear infinite;
+}
+.arrow2::after, .arrow2::before {
+    content: '';
+    position: absolute;
+    width: 48%;
+    height: 6px;
+    right: -6px;
+    background-color: #fd1490;
+  }
+  
+  .arrow2::after {
+    top: -8px;
+    transform: rotate(45deg);
+  }
+  
+  .arrow2::before {
+    top: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+    transform: rotate(-45deg);
+  }
+  @keyframes arrow2 {
+      0% {
+        top: 0;
+      }
+      50% {
+        top: 5px;
+      }
+      100% {
+        top: 0;
+      }
+    }
 .preview-area {
-    width: calc(33.33% - 20px);
+    width: calc(33.33% - 30px);
     float: left;
-    margin-right: 0px;
+    margin-right: 35px;
     margin-bottom: -45px;
 }
 .preview-area p{
@@ -319,10 +376,10 @@ select {
 .icon1 {
     position: absolute;
     transform: translate(-50%,-50%);
-    width: 34px;
+    width: 78px;
     height: 10px;
-    margin-bottom: -35px;
-    margin-top: -30px;
+    margin-bottom: -5px;
+    margin-top: -5px;
     margin-left: 110px;
     cursor: pointer;
     transform: rotate(90deg);
@@ -330,10 +387,10 @@ select {
   
   .arrow1 {
     position: absolute;
-    top: 1px;
-    width: 85%;
+    top: 15px;
+    width: 48%;
     height: 3px;
-    background-color: #3c8cee;
+    background-color: #fd1490;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
     animation: arrow 600ms linear infinite;
   }
@@ -341,10 +398,10 @@ select {
   .arrow1::after, .arrow1::before {
     content: '';
     position: absolute;
-    width: 48%;
+    width: 38%;
     height: 3px;
     right: -3px;
-    background-color: #3c8cee;
+    background-color: #fd1490;
   }
   
   .arrow1::after {
@@ -369,7 +426,7 @@ select {
       }
     }
 .calendar-container {
-    width: calc(33.33% - 20px);
+    width: calc(33.33% - 30px);
     float: left;
     margin-right: 0px;
     margin-top: -55px;
@@ -519,7 +576,7 @@ select {
 .modal-content .buttons-container1 button,
 .modal-content .buttons-container2 button {
     /* Adjusted styles */
-    background-color: #007bff;
+    background-color: #3c8cee;
     font-size: 15px;
     font-weight: 600;
     color: rgb(255, 255, 255);
@@ -606,9 +663,9 @@ label input {
 .save-button{
     display: flex;
     justify-content: flex-end;
-    margin-top: -20px;
+    margin-top: -50px;
     margin-bottom: 25px;
-    margin-right: 40px;
+    margin-right: 380px;
 }
 .save-button button{
     padding: 10px 15px;
