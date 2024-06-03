@@ -24,13 +24,11 @@ const handlePhonePePayment = async () => {
     }
 };
 
-
-
-
 const CustomCalendar = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSundays, setSelectedSundays] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    const [selectedInputValue, setSelectedInputValue] = useState('');
 
 
     const isSunday = (date) => date.getDay() === 0;
@@ -45,6 +43,7 @@ const CustomCalendar = () => {
 
         return dayOfWeek === 0 && date > today && today <= fridayBefore;
     };
+
 
     const formatDate = (date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -71,18 +70,18 @@ const CustomCalendar = () => {
         }
     };
 
-
     const handleSelectOption = (option) => {
         setShowPopup(false);
-
         if (option instanceof Date) {
             setSelectedDate(option);
-            setSelectedSundays([]);
-        } else if (Array.isArray(option) && option.length === 4) {
+            setSelectedInputValue(formatDate(option));
+        }
+        if (Array.isArray(option)) {
             setSelectedSundays(option);
-            setSelectedDate(option[0]);
+            setSelectedInputValue(option.map(date => formatDate(date)).join(', '));
         }
     };
+
 
     return (
         <div className="custom-calendar">
@@ -98,6 +97,10 @@ const CustomCalendar = () => {
                 inline
                 shouldDisabledDay={isSunday}
             />
+            <div className='input-box'>
+                <label htmlFor="selectedInputValue">Date</label>
+                <input id="selectedInputValue" type="text" value={selectedInputValue} readOnly />
+            </div>
             <Popup
                 trigger={<div className="popup-trigger"></div>}
                 position="left"
@@ -114,7 +117,7 @@ const CustomCalendar = () => {
                             <li>{formatDate(selectedDate)}</li>
                         )}
                         <div className='buttons-container1'>
-                            <button onClick={() => handleSelectOption(selectedDate)}> Select 1 Sunday</button>
+                            <button onClick={() => handleSelectOption(selectedDate)}>Select 1 Sunday</button>
                         </div>
                     </ul>
                     <ul>
@@ -124,7 +127,7 @@ const CustomCalendar = () => {
                             </li>
                         ))}
                         <div className='buttons-container2'>
-                            <button onClick={() => handleSelectOption(selectedSundays)}> Select 4 Sundays</button>
+                            <button onClick={() => handleSelectOption(selectedSundays)}>Select 4 Sundays</button>
                         </div>
                     </ul>
                 </div>
@@ -133,9 +136,12 @@ const CustomCalendar = () => {
     );
 };
 
+
+
 const CustomInput = ({ value, onClick }) => (
     <input type="text" value={value} onClick={onClick} readOnly />
 );
+
 
 const PriceInfo = ({ basePrice, extraCharacters, extraPrice, totalPrice }) => {
     return (
@@ -181,9 +187,10 @@ const ComposePage = () => {
     const [couponCode, setCouponCode] = useState('');
     const [isSaved, setIsSaved] = useState(false);
     const [selectedBgColor, setSelectedBgColor] = useState('#ffffff'); // Default background color
+    const [arrowPosition, setArrowPosition] = useState('start');
     const [selectedDate] = useState(null);
     const [selectedSundays] = useState([]);
-    const [arrowPosition, setArrowPosition] = useState('start');
+
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
         { value: '#ccffff', label: 'Light Blue' },
@@ -710,11 +717,6 @@ const ComposePage = () => {
                         <span>-{selectedEdition}</span>
                         <span>-{selectedSubCategory1}</span>
                         <span>-{selectedSubCategory2}</span>
-                        <span>-Dates:</span>
-                        {selectedDate && <span>{formatDate(selectedDate)}</span>}
-                        {selectedSundays.length > 0 && (
-                            <span>{selectedSundays.map((date) => formatDate(date)).join(', ')}</span>
-                        )}
                         {isTickAdded && <span>-Tick</span>}
                         {isBoldText && <span>-Bold</span>}
                         {selectedBgColor !== '#ffffff' && <span>-BG Color</span>}
@@ -770,7 +772,7 @@ const ComposePage = () => {
                     <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''} `}>
                         <h3>Compose Text Area</h3>
                     </div>
-                    <div className={`text-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                    <div className={`text-area `}>
                         <label htmlFor="textArea"></label>
                         <textarea
                             id="textArea"
@@ -801,7 +803,7 @@ const ComposePage = () => {
                             disabled={!selectedSubCategory1 || !selectedSubCategory2}
                         />
                     </div>
-                    <div className={`calendar-container ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                    <div className={`calendar-container   ${!selectedSubCategory2  ? 'disabled' : ''}`}>
                         {isAnimationStopped && (
                             <div class="icon1">
                                 <div class="arrow1"></div>
@@ -811,8 +813,9 @@ const ComposePage = () => {
                         {/* Include CustomCalendar component here */}
                         <CustomCalendar />
                     </div>
+
                     <div className={`content ${!selectedSubCategory2 ? 'disabled' : ''}`}>
-                        <label htmlFor="addTick">(Optical)  Tick</label>
+                        <label htmlFor="addTick">(Optional)  Tick</label>
                         <input
                             type="checkbox"
                             id="addTick"
