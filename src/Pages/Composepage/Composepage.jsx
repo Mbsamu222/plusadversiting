@@ -7,6 +7,8 @@ import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import { Link } from 'react-router-dom';
 import the_hindu_logo from '../Assests/the_hindu_logo.jpg'
 import modal_logo from '../Assests/modal_logo.png'
+import calendar_logo from '../Assests/calendar_logo.png'
+import exit_icon from '../Assests/exit_icon.png'
 import axios from 'axios';
 
 
@@ -24,12 +26,12 @@ const handlePhonePePayment = async () => {
     }
 };
 
-const CustomCalendar = () => {
+
+const CustomCalendar = ({ setIsSundaysSelected }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSundays, setSelectedSundays] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [selectedInputValue, setSelectedInputValue] = useState('');
-
 
     const isSunday = (date) => date.getDay() === 0;
 
@@ -43,7 +45,6 @@ const CustomCalendar = () => {
 
         return dayOfWeek === 0 && date > today && today <= fridayBefore;
     };
-
 
     const formatDate = (date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -71,7 +72,6 @@ const CustomCalendar = () => {
     };
 
     const handleSelectOption = (option) => {
-        setShowPopup(false);
         if (option instanceof Date) {
             setSelectedDate(option);
             setSelectedInputValue(formatDate(option));
@@ -80,25 +80,22 @@ const CustomCalendar = () => {
             setSelectedSundays(option);
             setSelectedInputValue(option.map(date => formatDate(date)).join(', '));
         }
+        setIsSundaysSelected(true); // Enable the elements
+        setShowPopup(false);
+    };
+    
+
+    const handleExitClick = () => {
+        setShowPopup(false);
     };
 
-
     return (
-        <div className="custom-calendar">
-            <DatePicker
-                selected={selectedDate}
-                onChange={handleDateSelect}
-                filterDate={filterPassedDate}
-                showYearDropdown
-                scrollableYearDropdown
-                dropdownMode="select"
-                dateFormat="dd/MM/yyyy"
-                customInput={<CustomInput />}
-                inline
-                shouldDisabledDay={isSunday}
-            />
+        <div>
+            <div className='calendar-logo' onClick={() => setShowPopup(true)}>
+                <img src={calendar_logo} alt="Calendar Logo" />
+            </div>
             <div className='input-box'>
-                <label htmlFor="selectedInputValue">Date</label>
+                <label htmlFor="selectedInputValue"></label>
                 <input id="selectedInputValue" type="text" value={selectedInputValue} readOnly />
             </div>
             <Popup
@@ -106,12 +103,27 @@ const CustomCalendar = () => {
                 position="left"
                 open={showPopup}
                 onClose={() => setShowPopup(false)}
+                modal
+                closeOnDocumentClick={false}
             >
                 <div className="modal-content">
-                    <h4>Special Offers Flat 50%</h4>
-                    <img src={modal_logo} alt="" />
-                    <p>Pay 1 Sunday 50% Offer Get Next 3 Sundays Free</p>
-                    <p>( You Pay Flats 50% Amount Only for Your Next 3 Sundays )</p>
+                    <div className="exit-icon" onClick={handleExitClick}>
+                        <img src={exit_icon} alt="Exit Icon" />
+                    </div>
+                    <div className="custom-calendar">
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={handleDateSelect}
+                            filterDate={filterPassedDate}
+                            showYearDropdown
+                            scrollableYearDropdown
+                            dropdownMode="select"
+                            dateFormat="dd/MM/yyyy"
+                            customInput={<CustomInput />}
+                            inline
+                            shouldDisabledDay={isSunday}
+                        />
+                    </div>
                     <ul className='selectedDate'>
                         {selectedDate && (
                             <li>{formatDate(selectedDate)}</li>
@@ -120,6 +132,10 @@ const CustomCalendar = () => {
                             <button onClick={() => handleSelectOption(selectedDate)}>Select 1 Sunday</button>
                         </div>
                     </ul>
+                    <h4>Special Offers Flat 50%</h4>
+                    <img src={modal_logo} alt="Modal Logo" />
+                    <p>Pay 1 Sunday 50% Offer Get Next 3 Sundays Free</p>
+                    <p>( You Pay Flats 50% Amount Only for Your Next 3 Sundays )</p>
                     <ul>
                         {selectedSundays.map((sunday, index) => (
                             <li key={index}>
@@ -136,12 +152,9 @@ const CustomCalendar = () => {
     );
 };
 
-
-
 const CustomInput = ({ value, onClick }) => (
     <input type="text" value={value} onClick={onClick} readOnly />
 );
-
 
 const PriceInfo = ({ basePrice, extraCharacters, extraPrice, totalPrice }) => {
     return (
@@ -190,7 +203,8 @@ const ComposePage = () => {
     const [arrowPosition, setArrowPosition] = useState('start');
     const [selectedDate] = useState(null);
     const [selectedSundays] = useState([]);
-
+    const [isSundaysSelected, setIsSundaysSelected] = useState(false);
+    const [selectedInputValue] = useState(''); 
     const colorOptions = [
         { value: '#ffffff', label: 'No BG Color' },
         { value: '#ccffff', label: 'Light Blue' },
@@ -211,7 +225,12 @@ const ComposePage = () => {
         setSelectedInputLabel(params.get('selectedInputLabel') || '');
     }, [location.search, params]);
 
+     
 
+    const [packageContent, setPackageContent] = useState({
+        selectedInputValue: '',
+        // other package content properties
+      });
 
     const handleTickBoxChange = (e) => {
         const isChecked = e.target.checked;
@@ -522,6 +541,7 @@ const ComposePage = () => {
         if (event.target.value) {
             setArrowPosition('start'); // Return arrow to start position
         }
+        setIsSundaysSelected(false)
     };
     const shouldBlink = !(selectedSubCategory1 && selectedSubCategory2);
 
@@ -769,10 +789,10 @@ const ComposePage = () => {
                             </div>
                         )}
                     </div>
-                    <div className={`horizonital-line-box ${!selectedSubCategory2 ? 'disabled' : ''} `}>
+                    <div className={`horizonital-line-box ${!isSundaysSelected ? 'disabled' : ''} `}>
                         <h3>Compose Text Area</h3>
                     </div>
-                    <div className={`text-area `}>
+                    <div className={`text-area ${! isSundaysSelected ? 'disabled' : ''}`}>
                         <label htmlFor="textArea"></label>
                         <textarea
                             id="textArea"
@@ -786,11 +806,11 @@ const ComposePage = () => {
                         />
                     </div>
                     {isAnimationStopped && (
-                        <div className='icon2'>
-                            <div className={`arrow2 ${!selectedSubCategory2 ? 'disabled' : ''}`}></div>
+                        <div className={`icon2 ${!isSundaysSelected ? 'disabled' : ''}`}>
+                            <div className='arrow2'></div>
                         </div>
                     )}
-                    <div className={`preview-area ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                    <div className={`preview-area ${! isSundaysSelected ? 'disabled' : ''}`}>
                         <p>Ads Preview (Tentative preview not for actual paper print)</p>
                         <textarea
                             id="previewTextArea"
@@ -803,18 +823,22 @@ const ComposePage = () => {
                             disabled={!selectedSubCategory1 || !selectedSubCategory2}
                         />
                     </div>
-                    <div className={`calendar-container   ${!selectedSubCategory2  ? 'disabled' : ''}`}>
+                    <div className={`calendar-container ${!selectedSubCategory2 ? 'disabled' : ''}`}>
                         {isAnimationStopped && (
                             <div class="icon1">
-                                <div class="arrow1"></div>
+                                <div class={`arrow1`}></div>
                             </div>
                         )}
                         <p>Calendar</p>
                         {/* Include CustomCalendar component here */}
-                        <CustomCalendar />
+                        <CustomCalendar 
+                        setIsSundaysSelected={setIsSundaysSelected}
+                        packageContent={packageContent}
+                        setPackageContent={setPackageContent}
+                  
+                        />
                     </div>
-
-                    <div className={`content ${!selectedSubCategory2 ? 'disabled' : ''}`}>
+                    <div className={`content ${! isSundaysSelected ? 'disabled' : ''}`}>
                         <label htmlFor="addTick">(Optional)  Tick</label>
                         <input
                             type="checkbox"
@@ -867,8 +891,7 @@ const ComposePage = () => {
                                             <th>Edition</th>
                                             <th>Subcategory 1</th>
                                             <th>Subcategory 2</th>
-                                            <th>Date</th>
-                                            <th>Sundays</th>
+                                            <th>Dates</th>
                                             <th>Extra Lines</th>
                                             {/* Conditionally render additional labels based on checkbox states */}
                                             {isTickAdded && <th>Add Tick</th>}
@@ -884,6 +907,7 @@ const ComposePage = () => {
                                             <td>{selectedEdition}</td>
                                             <td>{selectedSubCategory1}</td>
                                             <td>{selectedSubCategory2}</td>
+                                            <td>{selectedInputValue}</td>
                                             <td>{selectedDate ? formatDate(selectedDate) : ''}</td>
                                             <td>{selectedSundays.length > 0 ? selectedSundays.map((date) => formatDate(date)).join(', ') : ''}</td>
                                             <td>{extraCharacters}</td>
